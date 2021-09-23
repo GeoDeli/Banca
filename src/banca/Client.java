@@ -15,16 +15,17 @@ import javax.swing.JOptionPane;
  */
 public class Client extends javax.swing.JFrame {
       Connection con;
-      
+      int id;
     public Client() {
         initComponents();
     }
     
     //constructorul primeste ID-ul autentificat pentru a afisa informatiile clientului
-    public Client(int id) {
+    public Client(int id_c) {
         initComponents();
+        id=id_c;
       try {  
-       
+        
         String database="jdbc:mysql://localhost:3306/Banca";
         String username="root";
         String pass="";
@@ -68,6 +69,12 @@ public class Client extends javax.swing.JFrame {
         LabelEuro = new javax.swing.JLabel();
         LabelLei = new javax.swing.JLabel();
         BtnLichidare = new javax.swing.JButton();
+        BtnRetragere = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        TextEuro = new javax.swing.JTextField();
+        TextLei = new javax.swing.JTextField();
+        BtnInfo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -102,6 +109,19 @@ public class Client extends javax.swing.JFrame {
             }
         });
 
+        BtnRetragere.setText("Depozit/Retrageri");
+
+        jLabel6.setText("EURO:");
+
+        jLabel7.setText("LEI:");
+
+        BtnInfo.setText("Informatii");
+        BtnInfo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnInfoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -116,24 +136,37 @@ public class Client extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(25, 25, 25)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3))
-                                .addGap(41, 41, 41)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(LabelCNP)
-                                    .addComponent(labelID))
-                                .addGap(80, 80, 80)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel5))
-                                .addGap(54, 54, 54)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(LabelLei)
-                                    .addComponent(LabelEuro))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel2)
+                                            .addComponent(jLabel3))
+                                        .addGap(41, 41, 41)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(LabelCNP)
+                                            .addComponent(labelID))
+                                        .addGap(80, 80, 80)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel4)
+                                            .addComponent(jLabel5))
+                                        .addGap(54, 54, 54)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(LabelLei)
+                                            .addComponent(LabelEuro)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel6)
+                                            .addComponent(jLabel7))
+                                        .addGap(50, 50, 50)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(TextEuro, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(TextLei, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                         .addGap(0, 57, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(BtnLichidare)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(BtnLichidare, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(BtnRetragere, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(BtnInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -153,9 +186,23 @@ public class Client extends javax.swing.JFrame {
                     .addComponent(jLabel5)
                     .addComponent(LabelCNP)
                     .addComponent(LabelLei))
-                .addGap(26, 26, 26)
-                .addComponent(BtnLichidare)
-                .addContainerGap(174, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(BtnLichidare))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(44, 44, 44)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(TextEuro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(BtnRetragere)
+                    .addComponent(jLabel7)
+                    .addComponent(TextLei, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(BtnInfo)
+                .addContainerGap(89, Short.MAX_VALUE))
         );
 
         pack();
@@ -177,6 +224,24 @@ public class Client extends javax.swing.JFrame {
             Logger.getLogger(CreareUtilizator.class.getName()).log(Level.SEVERE, null, ex);
         }        
     }//GEN-LAST:event_BtnLichidareActionPerformed
+
+    private void BtnInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnInfoActionPerformed
+          try {
+              String query="Select * from Client where ID_C="+id;
+              Statement statement=con.createStatement();
+              ResultSet rs=statement.executeQuery(query);
+              while(rs.next())
+              {
+                  String info="Cont EURO: "+rs.getString("Sold_Cont_EURO")+"\n Cont LEI: "+rs.getString("Sold_Cont_LEI");
+                  JOptionPane.showMessageDialog(null, "Informatii Utilizator\n"+info, "Informatii: " + "Informatii Utilizator", JOptionPane.PLAIN_MESSAGE);
+          } 
+          }catch (SQLException ex) {
+              Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+          }
+     
+        
+
+    }//GEN-LAST:event_BtnInfoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -214,15 +279,21 @@ public class Client extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnInfo;
     private javax.swing.JButton BtnLichidare;
+    private javax.swing.JButton BtnRetragere;
     private javax.swing.JLabel LabelCNP;
     private javax.swing.JLabel LabelEuro;
     private javax.swing.JLabel LabelLei;
+    private javax.swing.JTextField TextEuro;
+    private javax.swing.JTextField TextLei;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel labelID;
     // End of variables declaration//GEN-END:variables
 
