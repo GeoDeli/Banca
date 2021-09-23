@@ -4,13 +4,10 @@
  */
 package banca;
 
-import com.sun.jdi.connect.spi.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -26,13 +23,13 @@ public class Client extends javax.swing.JFrame {
     //constructorul primeste ID-ul autentificat pentru a afisa informatiile clientului
     public Client(int id) {
         initComponents();
-        
+      try {  
        
-        java.sql.Connection con;
         String database="jdbc:mysql://localhost:3306/Banca";
         String username="root";
         String pass="";
-          try {
+        
+          
               con=DriverManager.getConnection(database,username,pass);
               String query="SELECT * FROM Client where ID_C="+id;
           Statement statement=con.createStatement();
@@ -70,8 +67,14 @@ public class Client extends javax.swing.JFrame {
         LabelCNP = new javax.swing.JLabel();
         LabelEuro = new javax.swing.JLabel();
         LabelLei = new javax.swing.JLabel();
+        BtnLichidare = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                formMouseMoved(evt);
+            }
+        });
 
         jLabel1.setText("Informatii client");
 
@@ -91,6 +94,14 @@ public class Client extends javax.swing.JFrame {
 
         LabelLei.setText("jLabel9");
 
+        BtnLichidare.setText("Lichidare conturi");
+        BtnLichidare.setEnabled(false);
+        BtnLichidare.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnLichidareActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -98,26 +109,32 @@ public class Client extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(136, 136, 136)
-                        .addComponent(jLabel1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addGap(41, 41, 41)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(LabelCNP)
-                            .addComponent(labelID))
-                        .addGap(80, 80, 80)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5))
-                        .addGap(54, 54, 54)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(LabelLei)
-                            .addComponent(LabelEuro))))
-                .addContainerGap(67, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(136, 136, 136)
+                                .addComponent(jLabel1))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(25, 25, 25)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3))
+                                .addGap(41, 41, 41)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(LabelCNP)
+                                    .addComponent(labelID))
+                                .addGap(80, 80, 80)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5))
+                                .addGap(54, 54, 54)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(LabelLei)
+                                    .addComponent(LabelEuro))))
+                        .addGap(0, 57, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(BtnLichidare)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -136,11 +153,30 @@ public class Client extends javax.swing.JFrame {
                     .addComponent(jLabel5)
                     .addComponent(LabelCNP)
                     .addComponent(LabelLei))
-                .addContainerGap(223, Short.MAX_VALUE))
+                .addGap(26, 26, 26)
+                .addComponent(BtnLichidare)
+                .addContainerGap(174, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
+        verificareLichidare();
+    }//GEN-LAST:event_formMouseMoved
+
+    private void BtnLichidareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnLichidareActionPerformed
+ try {
+        String query="Delete from Client where ID_C="+labelID.getText();
+        Statement statement=con.createStatement();
+          int row = statement.executeUpdate(query); 
+          if(row>0)
+  JOptionPane.showMessageDialog(null, "Utilizator sters cu succes", "Succes: " + "Utilizatorul a fost sters cu succes", JOptionPane.PLAIN_MESSAGE);
+     
+        } catch (SQLException ex) {
+            Logger.getLogger(CreareUtilizator.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+    }//GEN-LAST:event_BtnLichidareActionPerformed
 
     /**
      * @param args the command line arguments
@@ -178,6 +214,7 @@ public class Client extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnLichidare;
     private javax.swing.JLabel LabelCNP;
     private javax.swing.JLabel LabelEuro;
     private javax.swing.JLabel LabelLei;
@@ -188,4 +225,13 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel labelID;
     // End of variables declaration//GEN-END:variables
+
+    //se verifica daca clientul curent poate lichida conturile
+    private void verificareLichidare() {
+        Float euro=Float.parseFloat(LabelEuro.getText());
+         Float lei=Float.parseFloat(LabelLei.getText());
+         if(euro==0 && lei==0 && BtnLichidare.isEnabled()==false)
+             BtnLichidare.setEnabled(true);
+         
+    }
 }
