@@ -5,6 +5,12 @@
 package banca;
 
 import com.sun.jdi.connect.spi.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -16,6 +22,35 @@ public class Client extends javax.swing.JFrame {
     public Client() {
         initComponents();
     }
+    
+    //constructorul primeste ID-ul autentificat pentru a afisa informatiile clientului
+    public Client(int id) {
+        initComponents();
+        
+       
+        java.sql.Connection con;
+        String database="jdbc:mysql://localhost:3306/Banca";
+        String username="root";
+        String pass="";
+          try {
+              con=DriverManager.getConnection(database,username,pass);
+              String query="SELECT * FROM Client where ID_C="+id;
+          Statement statement=con.createStatement();
+         ResultSet resultSet = statement.executeQuery(query);
+       
+         if(resultSet.next()) 
+         {
+             LabelCNP.setText(resultSet.getString("CNP"));
+             labelID.setText(resultSet.getString("ID_C"));
+             LabelEuro.setText(resultSet.getString("Sold_Cont_EURO"));
+             LabelLei.setText(resultSet.getString("sold_Cont_Lei"));
+         }
+              
+          } catch (SQLException ex) {
+              Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+          }
+        
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -26,17 +61,82 @@ public class Client extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        labelID = new javax.swing.JLabel();
+        LabelCNP = new javax.swing.JLabel();
+        LabelEuro = new javax.swing.JLabel();
+        LabelLei = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel1.setText("Informatii client");
+
+        jLabel2.setText("ID");
+
+        jLabel3.setText("CNP");
+
+        jLabel4.setText("Sold Euro");
+
+        jLabel5.setText("Sold Lei");
+
+        labelID.setText("jLabel6");
+
+        LabelCNP.setText("jLabel7");
+
+        LabelEuro.setText("jLabel8");
+
+        LabelLei.setText("jLabel9");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(136, 136, 136)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
+                        .addGap(41, 41, 41)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(LabelCNP)
+                            .addComponent(labelID))
+                        .addGap(80, 80, 80)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5))
+                        .addGap(54, 54, 54)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(LabelLei)
+                            .addComponent(LabelEuro))))
+                .addContainerGap(67, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel4)
+                    .addComponent(labelID)
+                    .addComponent(LabelEuro))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel5)
+                    .addComponent(LabelCNP)
+                    .addComponent(LabelLei))
+                .addContainerGap(223, Short.MAX_VALUE))
         );
 
         pack();
@@ -78,5 +178,14 @@ public class Client extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel LabelCNP;
+    private javax.swing.JLabel LabelEuro;
+    private javax.swing.JLabel LabelLei;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel labelID;
     // End of variables declaration//GEN-END:variables
 }

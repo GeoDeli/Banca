@@ -164,7 +164,7 @@ public class AutentificareClient extends javax.swing.JFrame {
          if(resultSet.next())
          {
              JOptionPane.showMessageDialog(null, "Client autentificat cu succes", "Succes " + "Autentificare reusita", JOptionPane.INFORMATION_MESSAGE);
-                Client c=new Client();
+                Client c=new Client(ID);
             c.setVisible(true);
          }
          else
