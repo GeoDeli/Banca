@@ -15,6 +15,8 @@ public class Banca {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        Utilizator u=new Utilizator();
+        u.setVisible(true);
     }
     
 }
