@@ -61,6 +61,24 @@ public class CreareUtilizator extends javax.swing.JDialog {
         
     }
 
+    CreareUtilizator() {
+     
+        initComponents();
+
+        // Close the dialog when Esc is pressed
+        String cancelName = "cancel";
+        InputMap inputMap = getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), cancelName);
+        ActionMap actionMap = getRootPane().getActionMap();
+        actionMap.put(cancelName, new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                doClose(RET_CANCEL);
+            }
+        });
+        okButton.setEnabled(false);
+        
+    }
+
     /**
      * @return the return status of this dialog - one of RET_OK or RET_CANCEL
      */
@@ -238,7 +256,6 @@ public class CreareUtilizator extends javax.swing.JDialog {
             Logger.getLogger(CreareUtilizator.class.getName()).log(Level.SEVERE, null, ex);
         }
       
-      
     }//GEN-LAST:event_okButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
@@ -287,7 +304,7 @@ public class CreareUtilizator extends javax.swing.JDialog {
     }//GEN-LAST:event_TextLeiFocusLost
 
     private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
-verificare();        // TODO add your handling code here:
+        verificare();        // TODO add your handling code here:
     }//GEN-LAST:event_formMouseMoved
     
     private void doClose(int retStatus) {
