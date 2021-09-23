@@ -55,7 +55,7 @@ public class CreareUtilizator extends javax.swing.JDialog {
             numberFormatter.setAllowsInvalid(false); //this is the key!!
             numberFormatter.setMinimum(0l); //Optional
             
-    JFormattedTextField field = new JFormattedTextField(numberFormatter);
+             JFormattedTextField field = new JFormattedTextField(numberFormatter);
     
         
     }
@@ -82,7 +82,7 @@ public class CreareUtilizator extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        TextCNP = new javax.swing.JTextField();
+        TextCNP = new javax.swing.JFormattedTextField();
         TextEuro = new javax.swing.JTextField();
         TextLei = new javax.swing.JTextField();
 
@@ -113,6 +113,24 @@ public class CreareUtilizator extends javax.swing.JDialog {
         jLabel3.setText("Sold cont Euro:");
 
         jLabel4.setText("Sold cont Lei:");
+
+        TextCNP.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                TextCNPKeyReleased(evt);
+            }
+        });
+
+        TextEuro.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                TextEuroKeyReleased(evt);
+            }
+        });
+
+        TextLei.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                TextLeiKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -191,6 +209,27 @@ public class CreareUtilizator extends javax.swing.JDialog {
     private void closeDialog(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_closeDialog
         doClose(RET_CANCEL);
     }//GEN-LAST:event_closeDialog
+
+    private void TextCNPKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextCNPKeyReleased
+ // TODO add your handling code here:
+        String text=TextCNP.getText();
+        String regex = "[0-9]+";
+        System.out.println(text+" " +text.matches(regex));        // TODO add your handling code here:
+    }//GEN-LAST:event_TextCNPKeyReleased
+
+    private void TextEuroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextEuroKeyReleased
+ // TODO add your handling code here:
+        String text=TextEuro.getText();
+        String regex = "[0-9]+";
+        System.out.println(text+" " +text.matches(regex));        // TODO add your handling code here:
+    }//GEN-LAST:event_TextEuroKeyReleased
+
+    private void TextLeiKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextLeiKeyReleased
+ // TODO add your handling code here:
+        String text=TextLei.getText();
+        String regex = "[0-9]+";
+        System.out.println(text+" " +text.matches(regex));        // TODO add your handling code here:
+    }//GEN-LAST:event_TextLeiKeyReleased
     
     private void doClose(int retStatus) {
         returnStatus = retStatus;
