@@ -4,9 +4,17 @@
  */
 package banca;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.NumberFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.management.Notification;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -48,6 +56,7 @@ public class CreareUtilizator extends javax.swing.JDialog {
                 doClose(RET_CANCEL);
             }
         });
+        okButton.setEnabled(false);
         
         
     }
@@ -78,13 +87,18 @@ public class CreareUtilizator extends javax.swing.JDialog {
         TextEuro = new javax.swing.JTextField();
         TextLei = new javax.swing.JTextField();
 
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                formMouseMoved(evt);
+            }
+        });
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 closeDialog(evt);
             }
         });
 
-        okButton.setText("OK");
+        okButton.setText("Creare ");
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
@@ -124,6 +138,11 @@ public class CreareUtilizator extends javax.swing.JDialog {
             }
         });
 
+        TextLei.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                TextLeiFocusLost(evt);
+            }
+        });
         TextLei.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 TextLeiKeyReleased(evt);
@@ -140,7 +159,7 @@ public class CreareUtilizator extends javax.swing.JDialog {
                         .addContainerGap()
                         .addComponent(cancelButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(okButton))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(25, 25, 25)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -153,16 +172,13 @@ public class CreareUtilizator extends javax.swing.JDialog {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(TextLei, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
                                 .addComponent(TextEuro, javax.swing.GroupLayout.Alignment.LEADING)))
-                        .addGap(0, 62, Short.MAX_VALUE)))
+                        .addGap(0, 24, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(97, 97, 97)
                 .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cancelButton, okButton});
-
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -180,7 +196,7 @@ public class CreareUtilizator extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(TextLei, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
@@ -193,7 +209,36 @@ public class CreareUtilizator extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        doClose(RET_OK);
+      try {
+        Connection con;
+        String database="jdbc:mysql://localhost:3306/Banca";
+        String username="root";
+        String pass="";
+        con=DriverManager.getConnection(database,username,pass);
+         int id = 0;
+         String cnp=TextCNP.getText();
+         float eu=Float.parseFloat(TextEuro.getText());
+         float lei=Float.parseFloat(TextLei.getText());
+        String query="SELECT * FROM Client ORDER BY ID_C DESC LIMIT 1 ";
+        Statement statement=con.createStatement();
+         ResultSet resultSet = statement.executeQuery(query);
+        
+         while(resultSet.next())
+         {
+             id=Integer.parseInt(resultSet.getString("ID_C"))+1;
+             
+         }
+         query="INSERT INTO `client`(`ID_C`, `CNP`, `Sold_Cont_EURO`, `Sold_Cont_LEI`) VALUES ("+id+",\""+cnp+"\","+eu+","+lei+")";
+          statement=con.createStatement();  
+          int row = statement.executeUpdate(query); 
+          if(row>0)
+  JOptionPane.showMessageDialog(null, "Utilizator creat cu succes", "Succes: " + "Utilizator Creat", JOptionPane.PLAIN_MESSAGE);
+     doClose(RET_OK);
+        } catch (SQLException ex) {
+            Logger.getLogger(CreareUtilizator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      
+      
     }//GEN-LAST:event_okButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
@@ -207,44 +252,74 @@ public class CreareUtilizator extends javax.swing.JDialog {
         doClose(RET_CANCEL);
     }//GEN-LAST:event_closeDialog
 
+    //verifica CNP-ul sa fie in parametrii normali
     private void TextCNPKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextCNPKeyReleased
-          DoarNumar(TextCNP.getText());
-         String text=TextCNP.getText();
-         if(text.length()>13)
-        JOptionPane.showMessageDialog(null, "Ati introdus mai mult de 13 caractere pentru CNP", "Eroare: " + "CNP prea lung", JOptionPane.WARNING_MESSAGE);
-          
 
+         String text=TextCNP.getText();
+         //verifica CNP-ul sa nu depaseasca 13 caractere
+         if(text.length()>13)
+         JOptionPane.showMessageDialog(null, "Ati introdus mai mult de 13 caractere pentru CNP", "Eroare: " + "CNP prea lung", JOptionPane.WARNING_MESSAGE);
+        if(DoarNumar(TextCNP.getText())==0)
+             JOptionPane.showMessageDialog(null, "Ati introdus un caracter nepermis", "Eroare: " + "Caracter nepermis", JOptionPane.ERROR_MESSAGE);
     }//GEN-LAST:event_TextCNPKeyReleased
 
     private void TextEuroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextEuroKeyReleased
-         DoarNumar(TextEuro.getText());
+         if(DoarNumar(TextEuro.getText())==0)
+             JOptionPane.showMessageDialog(null, "Ati introdus un caracter nepermis", "Eroare: " + "Caracter nepermis", JOptionPane.ERROR_MESSAGE);
+
     }//GEN-LAST:event_TextEuroKeyReleased
 
     private void TextLeiKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextLeiKeyReleased
-        DoarNumar(TextLei.getText());
+                if(DoarNumar(TextLei.getText())==0)
+             JOptionPane.showMessageDialog(null, "Ati introdus un caracter nepermis", "Eroare: " + "Caracter nepermis", JOptionPane.ERROR_MESSAGE);
     }//GEN-LAST:event_TextLeiKeyReleased
-
+            
+    //verifica daca CNP-ul are mai putine caractere decat trebuie
     private void TextCNPFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_TextCNPFocusLost
             if(TextCNP.getText().length()<13)
         JOptionPane.showMessageDialog(null, "Ati introdus mai putin de 13 caractere pentru CNP", "Eroare: " + "CNP prea scurt", JOptionPane.WARNING_MESSAGE);
-                 // TODO add your handling code here:
+                 
     }//GEN-LAST:event_TextCNPFocusLost
+
+    private void TextLeiFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_TextLeiFocusLost
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_TextLeiFocusLost
+
+    private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
+verificare();        // TODO add your handling code here:
+    }//GEN-LAST:event_formMouseMoved
     
     private void doClose(int retStatus) {
         returnStatus = retStatus;
         setVisible(false);
         dispose();
     }
-
+            
+    int verificare()
+    {
+        //se asigura ca toate campurile sunt completate
+        if(TextCNP.getText().length()>0&&TextEuro.getText().length()>0&&TextLei.getText().length()>0)
+          if(DoarNumar(TextCNP.getText())==1)   //verifica sa fie numere
+          if(DoarNumar(TextEuro.getText())==1)
+            if(DoarNumar(TextCNP.getText())==1)
+            {  
+                 okButton.setEnabled(true); //permite accesul la butonul de OK
+                 return 1;
+            }
+          okButton.setEnabled(false);
+         return 0;
+    }
     //se asigura ca doar numerele sunt introduse in TextBox-uri
-   void DoarNumar(String text)
+   int DoarNumar(String text)
    {
-       String regex = "[0-9]+";
+       String regex = "^[0-9]+";
         if(!text.matches(regex)){
        
-                        JOptionPane.showMessageDialog(null, "Ati introdus un caracter nepermis", "Atentionare: " + "Caracter nepermis", JOptionPane.WARNING_MESSAGE);
-        }       
-            
+        return 0;
+        }  
+        else
+            return 1;
    }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
