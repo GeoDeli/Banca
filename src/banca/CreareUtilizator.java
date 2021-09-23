@@ -7,18 +7,19 @@ package banca;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.text.NumberFormat;
+import javax.management.Notification;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.text.NumberFormatter;
 
-/**
- *
- * @author delim
- */
+
+
+
 public class CreareUtilizator extends javax.swing.JDialog {
 
     /**
@@ -49,15 +50,6 @@ public class CreareUtilizator extends javax.swing.JDialog {
         });
         
         
-        NumberFormat longFormat = NumberFormat.getIntegerInstance();
-        NumberFormatter numberFormatter = new NumberFormatter(longFormat);
-           // numberFormatter.setValueClass(Long.class); //optional, ensures you will always get a long value
-            numberFormatter.setAllowsInvalid(false); //this is the key!!
-            numberFormatter.setMinimum(0l); //Optional
-            
-             JFormattedTextField field = new JFormattedTextField(numberFormatter);
-    
-        
     }
 
     /**
@@ -82,7 +74,7 @@ public class CreareUtilizator extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        TextCNP = new javax.swing.JFormattedTextField();
+        TextCNP = new javax.swing.JTextField();
         TextEuro = new javax.swing.JTextField();
         TextLei = new javax.swing.JTextField();
 
@@ -114,6 +106,12 @@ public class CreareUtilizator extends javax.swing.JDialog {
 
         jLabel4.setText("Sold cont Lei:");
 
+        TextCNP.setColumns(13);
+        TextCNP.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                TextCNPFocusLost(evt);
+            }
+        });
         TextCNP.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 TextCNPKeyReleased(evt);
@@ -144,24 +142,23 @@ public class CreareUtilizator extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(37, 37, 37)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(156, 156, 156)
-                                .addComponent(jLabel1))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(25, 25, 25)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(37, 37, 37)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(TextCNP, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(TextLei, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
-                                        .addComponent(TextEuro, javax.swing.GroupLayout.Alignment.LEADING)))))
-                        .addGap(0, 137, Short.MAX_VALUE)))
+                            .addComponent(TextCNP, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(TextLei, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
+                                .addComponent(TextEuro, javax.swing.GroupLayout.Alignment.LEADING)))
+                        .addGap(0, 62, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(97, 97, 97)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cancelButton, okButton});
@@ -183,7 +180,7 @@ public class CreareUtilizator extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(TextLei, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
@@ -211,25 +208,27 @@ public class CreareUtilizator extends javax.swing.JDialog {
     }//GEN-LAST:event_closeDialog
 
     private void TextCNPKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextCNPKeyReleased
- // TODO add your handling code here:
-        String text=TextCNP.getText();
-        String regex = "[0-9]+";
-        System.out.println(text+" " +text.matches(regex));        // TODO add your handling code here:
+          DoarNumar(TextCNP.getText());
+         String text=TextCNP.getText();
+         if(text.length()>13)
+        JOptionPane.showMessageDialog(null, "Ati introdus mai mult de 13 caractere pentru CNP", "Eroare: " + "CNP prea lung", JOptionPane.WARNING_MESSAGE);
+          
+
     }//GEN-LAST:event_TextCNPKeyReleased
 
     private void TextEuroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextEuroKeyReleased
- // TODO add your handling code here:
-        String text=TextEuro.getText();
-        String regex = "[0-9]+";
-        System.out.println(text+" " +text.matches(regex));        // TODO add your handling code here:
+         DoarNumar(TextEuro.getText());
     }//GEN-LAST:event_TextEuroKeyReleased
 
     private void TextLeiKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextLeiKeyReleased
- // TODO add your handling code here:
-        String text=TextLei.getText();
-        String regex = "[0-9]+";
-        System.out.println(text+" " +text.matches(regex));        // TODO add your handling code here:
+        DoarNumar(TextLei.getText());
     }//GEN-LAST:event_TextLeiKeyReleased
+
+    private void TextCNPFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_TextCNPFocusLost
+            if(TextCNP.getText().length()<13)
+        JOptionPane.showMessageDialog(null, "Ati introdus mai putin de 13 caractere pentru CNP", "Eroare: " + "CNP prea scurt", JOptionPane.WARNING_MESSAGE);
+                 // TODO add your handling code here:
+    }//GEN-LAST:event_TextCNPFocusLost
     
     private void doClose(int retStatus) {
         returnStatus = retStatus;
@@ -237,9 +236,16 @@ public class CreareUtilizator extends javax.swing.JDialog {
         dispose();
     }
 
-    /**
-     * @param args the command line arguments
-     */
+    //se asigura ca doar numerele sunt introduse in TextBox-uri
+   void DoarNumar(String text)
+   {
+       String regex = "[0-9]+";
+        if(!text.matches(regex)){
+       
+                        JOptionPane.showMessageDialog(null, "Ati introdus un caracter nepermis", "Atentionare: " + "Caracter nepermis", JOptionPane.WARNING_MESSAGE);
+        }       
+            
+   }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
