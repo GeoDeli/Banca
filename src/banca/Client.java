@@ -158,7 +158,7 @@ public class Client extends javax.swing.JFrame {
               ResultSet rs=statement.executeQuery(query);
               while(rs.next())
               { //creaza string-ul de afisare
-                  String info="Cont EURO: "+rs.getString("Sold_Cont_EURO")+"\n Cont LEI: "+rs.getString("Sold_Cont_LEI");
+                  String info="Cont EURO: "+rs.getString("Sold_Cont_EURO")+"\nCont LEI: "+rs.getString("Sold_Cont_LEI");
                   JOptionPane.showMessageDialog(null, "Informatii Utilizator\n"+info, "Informatii: " + " Utilizator", JOptionPane.PLAIN_MESSAGE);
           } 
           }catch (SQLException ex) {

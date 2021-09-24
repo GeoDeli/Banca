@@ -24,26 +24,16 @@ public class Retragere extends javax.swing.JFrame {
         initComponents();
     }
 
-    Retragere(int id_c) {
+    Retragere(int id_c) throws SQLException {
             initComponents();
               id=id_c;
-      try {  
+     
           //realizeaza conexiunea la BD
         String database="jdbc:mysql://localhost:3306/Banca";
         String username="root";
         String pass="";
               con=DriverManager.getConnection(database,username,pass);
-         String query="Select * from Client where ID_C="+id;
-      Statement statement =con.createStatement();
-      ResultSet rs=statement.executeQuery(query);
-      while(rs.next())
-      { //preia informatia despre conturi
-        LabelEuro.setText(rs.getString("Sold_Cont_EURO")); 
-         LabelLei.setText(rs.getString("Sold_Cont_LEI"));
-      }
-          } catch (SQLException ex) {
-              Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-          }
+     IncarcareInformatii();
             
     }
 
@@ -65,6 +55,7 @@ public class Retragere extends javax.swing.JFrame {
         TextEuro = new javax.swing.JTextField();
         TextLei = new javax.swing.JTextField();
         BtnRetragere = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -98,6 +89,13 @@ public class Retragere extends javax.swing.JFrame {
                 BtnRetragereMouseEntered(evt);
             }
         });
+        BtnRetragere.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnRetragereActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Retragere fonduri");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -110,23 +108,38 @@ public class Retragere extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4))
-                .addGap(48, 48, 48)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(LabelEuro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(LabelLei, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(TextLei, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TextEuro))
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(48, 48, 48)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(LabelEuro, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(21, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(LabelLei)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(TextEuro, javax.swing.GroupLayout.DEFAULT_SIZE, 68, Short.MAX_VALUE)
+                            .addComponent(TextLei))
+                        .addGap(59, 59, 59))))
             .addGroup(layout.createSequentialGroup()
-                .addGap(73, 73, 73)
-                .addComponent(BtnRetragere)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(73, 73, 73)
+                        .addComponent(BtnRetragere))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(75, 75, 75)
+                        .addComponent(jLabel5)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(51, 51, 51)
+                .addGap(19, 19, 19)
+                .addComponent(jLabel5)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(LabelEuro))
@@ -134,15 +147,15 @@ public class Retragere extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(LabelLei))
-                .addGap(27, 27, 27)
+                .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(TextEuro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(TextLei, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(TextLei, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                    .addComponent(TextEuro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addComponent(BtnRetragere)
                 .addGap(26, 26, 26))
         );
@@ -162,18 +175,95 @@ public class Retragere extends javax.swing.JFrame {
 
     }//GEN-LAST:event_TextLeiKeyReleased
 
+    //se verifica daca informatiile introduse sunt corespunzatoare pentru a retrage bani
     private void BtnRetragereMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BtnRetragereMouseEntered
       
-       if(TextEuro.getText().isBlank()&&TextLei.getText().isBlank())
-         BtnRetragere.setEnabled(false);
+       String euro= TextEuro.getText();
+       String lei=TextLei.getText();
+       
+       if(!euro.isBlank())
+           if(DoarNumar(euro)==1)
+           {
+               if(!lei.isBlank())
+                 if(DoarNumar(lei)==1)
+             BtnRetragere.setEnabled(true);
+                else
+             BtnRetragere.setEnabled(false);
+          else
+                    BtnRetragere.setEnabled(true);
+           }
+              else
+                    BtnRetragere.setEnabled(false);
+            
+       
+         if(!lei.isBlank())
+             if(DoarNumar(lei)==1)
+             { 
+                 if(!euro.isBlank())
+                     if(DoarNumar(euro)==1)
+                         BtnRetragere.setEnabled(true);
+                    else
+                        BtnRetragere.setEnabled(false);
        else
-           BtnRetragere.setEnabled(true);
+                    BtnRetragere.setEnabled(true);
+             
+             }
+          else
+                    BtnRetragere.setEnabled(false);
+          if(euro.isBlank()&&lei.isBlank())
+           BtnRetragere.setEnabled(false);
+   
+     
+       
     }//GEN-LAST:event_BtnRetragereMouseEntered
+
+    private void BtnRetragereActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnRetragereActionPerformed
+        int row=0;
+          if(!TextEuro.getText().isBlank())
+          {
+              try {
+                  Float euro=Float.parseFloat(TextEuro.getText());
+                  Float sold=Float.parseFloat(LabelEuro.getText());
+                  Float nousold=sold-euro;
+                  String query="Update Client set Sold_Cont_EURO="+nousold+" where ID_C="+id;
+                  Statement s=con.createStatement();
+                   row=s.executeUpdate(query);
+                  
+              } catch (SQLException ex) {
+                  Logger.getLogger(Retragere.class.getName()).log(Level.SEVERE, null, ex);
+              }
+
+               
+          }
+           if(!TextLei.getText().isBlank())
+           {
+              try {
+                  Float lei=Float.parseFloat(TextLei.getText());
+                  Float sold=Float.parseFloat(LabelLei.getText());
+                  Float nousold=sold-lei;
+                  String query="Update Client set Sold_Cont_LEI="+nousold+" where ID_C="+id;
+                  Statement s=con.createStatement();
+                   row=s.executeUpdate(query);
+                  
+              } catch (SQLException ex) {
+                  Logger.getLogger(Retragere.class.getName()).log(Level.SEVERE, null, ex);
+              }
+
+           }
+           if(row>0)
+                  {
+                      JOptionPane.showMessageDialog(null, "Retragerea a fost efectuata cu succes", "Succes: " + "Retragere numerar", JOptionPane.INFORMATION_MESSAGE);
+                     
+                  }
+                  else
+                      JOptionPane.showMessageDialog(null, "A aparut o eroare", "Eroare: " + "Ceva nu a functionat bine", JOptionPane.ERROR_MESSAGE);
+           IncarcareInformatii();
+    }//GEN-LAST:event_BtnRetragereActionPerformed
 
    
     int DoarNumar(String text)
    {
-       String regex = "^[0-9]+";
+       String regex = "^.{0}$|^[0-9]+"; //regex pentru a fi doar numere sau un sir null
         if(text.matches(regex))
             return 1;  
         else 
@@ -222,5 +312,24 @@ public class Retragere extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     // End of variables declaration//GEN-END:variables
+
+    private void IncarcareInformatii() {
+     
+        TextEuro.setText("");
+        TextLei.setText("");
+        try{
+            String query="Select * from Client where ID_C="+id;
+      Statement statement =con.createStatement();
+      ResultSet rs=statement.executeQuery(query);
+      while(rs.next())
+      { //preia informatia despre conturi
+        LabelEuro.setText(rs.getString("Sold_Cont_EURO")); 
+         LabelLei.setText(rs.getString("Sold_Cont_LEI"));
+      }
+          } catch (SQLException ex) {
+              Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+          }
+    }
 }

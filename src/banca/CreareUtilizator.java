@@ -330,7 +330,7 @@ public class CreareUtilizator extends javax.swing.JDialog {
     //se asigura ca doar numerele sunt introduse in TextBox-uri
    int DoarNumar(String text)
    {
-       String regex = "^[0-9]+";
+       String regex = "^.{0}$|^[0-9]+"; //regex pentru a fi doar numere sau un sir null
         if(!text.matches(regex)){
        
         return 0;
