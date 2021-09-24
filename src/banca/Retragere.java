@@ -330,9 +330,11 @@ public class Retragere extends javax.swing.JFrame {
                     BtnActiune.setEnabled(true);
                 }
                 
+                //verifica daca suma introdusa este mai mare decat ceea ce are in conturi. Daca da, atentioneaza si ingheata butonul
                 Float sold = Float.parseFloat(LabelEuro.getText());
                 if(sold-Float.parseFloat(euro)<0&&RBRetrag.isSelected())
-                { JOptionPane.showMessageDialog(null, "Nu  aveti atat de multi euro in contul de lei", "Eroare: " + "Suma introdusa este prea mare", JOptionPane.ERROR_MESSAGE);
+                { 
+                    JOptionPane.showMessageDialog(null, "Nu  aveti atat de multi euro in contul de lei", "Eroare: " + "Suma introdusa este prea mare", JOptionPane.ERROR_MESSAGE);
                  BtnActiune.setEnabled(false);
                 }
             } else {
@@ -340,10 +342,10 @@ public class Retragere extends javax.swing.JFrame {
             }
         }
 
-        if (!lei.isBlank()) {
-            if (DoarNumar(lei) == 1) {
-                if (!euro.isBlank()) {
-                    if (DoarNumar(euro) == 1) {
+        if (!lei.isBlank()) { //verifica daca s-a introdus o valoare in campul de lei
+            if (DoarNumar(lei) == 1) { //daca valoarea introdusa este numerica
+                if (!euro.isBlank()) { //daca si al doilea camp contine o valoare
+                    if (DoarNumar(euro) == 1) { //daca valoarea este numerica
                         BtnActiune.setEnabled(true);
                     } else {
                         BtnActiune.setEnabled(false);
@@ -351,6 +353,7 @@ public class Retragere extends javax.swing.JFrame {
                 } else {
                     BtnActiune.setEnabled(true);
                 }
+                 //verifica daca suma introdusa este mai mare decat ceea ce are in conturi. Daca da, atentioneaza si ingheata butonul
                 Float sold = Float.parseFloat(LabelLei.getText());
                 if(sold-Float.parseFloat(lei)<0&&RBRetrag.isSelected())
                 { JOptionPane.showMessageDialog(null, "Nu  aveti atat de multi lei in contul de lei", "Eroare: " + "Suma introdusa este prea mare", JOptionPane.ERROR_MESSAGE);
