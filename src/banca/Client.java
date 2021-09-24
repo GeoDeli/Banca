@@ -20,30 +20,17 @@ public class Client extends javax.swing.JFrame {
         initComponents();
     }
     
-    //constructorul primeste ID-ul autentificat pentru a afisa informatiile clientului
+    //constructorul primeste ID-ul autentificat pentru a afisa informatiile clientului pe parcurs
     public Client(int id_c) {
         initComponents();
         id=id_c;
       try {  
-        
+          //realizeaza conexiunea la BD
         String database="jdbc:mysql://localhost:3306/Banca";
         String username="root";
         String pass="";
-        
-          
               con=DriverManager.getConnection(database,username,pass);
-              String query="SELECT * FROM Client where ID_C="+id;
-          Statement statement=con.createStatement();
-         ResultSet resultSet = statement.executeQuery(query);
-       
-         if(resultSet.next()) 
-         {
-             LabelCNP.setText(resultSet.getString("CNP"));
-             labelID.setText(resultSet.getString("ID_C"));
-             LabelEuro.setText(resultSet.getString("Sold_Cont_EURO"));
-             LabelLei.setText(resultSet.getString("sold_Cont_Lei"));
-         }
-              
+                 
           } catch (SQLException ex) {
               Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
           }
@@ -60,49 +47,15 @@ public class Client extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        labelID = new javax.swing.JLabel();
-        LabelCNP = new javax.swing.JLabel();
-        LabelEuro = new javax.swing.JLabel();
-        LabelLei = new javax.swing.JLabel();
         BtnLichidare = new javax.swing.JButton();
         BtnRetragere = new javax.swing.JButton();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        TextEuro = new javax.swing.JTextField();
-        TextLei = new javax.swing.JTextField();
         BtnInfo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseMoved(java.awt.event.MouseEvent evt) {
-                formMouseMoved(evt);
-            }
-        });
 
         jLabel1.setText("Informatii client");
 
-        jLabel2.setText("ID");
-
-        jLabel3.setText("CNP");
-
-        jLabel4.setText("Sold Euro");
-
-        jLabel5.setText("Sold Lei");
-
-        labelID.setText("jLabel6");
-
-        LabelCNP.setText("jLabel7");
-
-        LabelEuro.setText("jLabel8");
-
-        LabelLei.setText("jLabel9");
-
         BtnLichidare.setText("Lichidare conturi");
-        BtnLichidare.setEnabled(false);
         BtnLichidare.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnLichidareActionPerformed(evt);
@@ -110,10 +63,11 @@ public class Client extends javax.swing.JFrame {
         });
 
         BtnRetragere.setText("Depozit/Retrageri");
-
-        jLabel6.setText("EURO:");
-
-        jLabel7.setText("LEI:");
+        BtnRetragere.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnRetragereActionPerformed(evt);
+            }
+        });
 
         BtnInfo.setText("Informatii");
         BtnInfo.addActionListener(new java.awt.event.ActionListener() {
@@ -127,113 +81,82 @@ public class Client extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(45, 45, 45)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(136, 136, 136)
-                                .addComponent(jLabel1))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(25, 25, 25)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel2)
-                                            .addComponent(jLabel3))
-                                        .addGap(41, 41, 41)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(LabelCNP)
-                                            .addComponent(labelID))
-                                        .addGap(80, 80, 80)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel4)
-                                            .addComponent(jLabel5))
-                                        .addGap(54, 54, 54)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(LabelLei)
-                                            .addComponent(LabelEuro)))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel6)
-                                            .addComponent(jLabel7))
-                                        .addGap(50, 50, 50)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(TextEuro, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(TextLei, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                        .addGap(0, 57, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(BtnLichidare, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(BtnRetragere, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(BtnInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap())
+                        .addGap(29, 29, 29)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(BtnLichidare, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(BtnRetragere)
+                        .addComponent(BtnInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel4)
-                    .addComponent(labelID)
-                    .addComponent(LabelEuro))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel5)
-                    .addComponent(LabelCNP)
-                    .addComponent(LabelLei))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addComponent(BtnLichidare))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(44, 44, 44)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(TextEuro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(BtnRetragere)
-                    .addComponent(jLabel7)
-                    .addComponent(TextLei, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(20, 20, 20)
                 .addComponent(BtnInfo)
-                .addContainerGap(89, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(BtnLichidare)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(BtnRetragere)
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
-        verificareLichidare();
-    }//GEN-LAST:event_formMouseMoved
-
+        //lichideaza conturile utilizatorului daca acesta este sigur de optiunea aleasa
     private void BtnLichidareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnLichidareActionPerformed
  try {
-        String query="Delete from Client where ID_C="+labelID.getText();
-        Statement statement=con.createStatement();
-          int row = statement.executeUpdate(query); 
-          if(row>0)
-  JOptionPane.showMessageDialog(null, "Utilizator sters cu succes", "Succes: " + "Utilizatorul a fost sters cu succes", JOptionPane.PLAIN_MESSAGE);
-     
+     String query="Select * from Client where ID_C="+id;
+      Statement statement =con.createStatement();
+      ResultSet rs=statement.executeQuery(query);
+      while(rs.next())
+      { //preia informatia despre conturi
+        Float euro=Float.parseFloat(rs.getString("Sold_Cont_EURO")); 
+         Float lei=Float.parseFloat(rs.getString("Sold_Cont_LEI"));
+         
+         if(euro!=0 && lei!=0)  //verifica daca se poate sterge contul
+              JOptionPane.showMessageDialog(null, "Actiune imposibila \nConturile au sold diferit de 0", "Eroare: " + "Lichidare imposibila", JOptionPane.ERROR_MESSAGE);
+            else
+         {
+             //se intreaba utilizatorul daca doreste stergerea contului
+            int raspuns=  JOptionPane.showConfirmDialog(null,"Sigur doriti sa lichidati conturile?","Sunteti sigur?",JOptionPane.YES_NO_OPTION);
+           
+            if(raspuns==JOptionPane.YES_OPTION)
+            {  //stergere efectuva
+             query="Delete from Client where ID_C="+id;
+              statement=con.createStatement();
+             int row = statement.executeUpdate(query); 
+            if(row>0)
+              JOptionPane.showMessageDialog(null, "Utilizator sters cu succes", "Succes: " + "Utilizatorul a fost sters cu succes", JOptionPane.INFORMATION_MESSAGE);
+           }
+           else 
+                //anulare stergere
+           if(raspuns==JOptionPane.NO_OPTION)
+         JOptionPane.showMessageDialog(null, "Lichidarea conturilor este oprita cu succes", "Abandon " + "", JOptionPane.INFORMATION_MESSAGE);
+
+         }
+      }
         } catch (SQLException ex) {
             Logger.getLogger(CreareUtilizator.class.getName()).log(Level.SEVERE, null, ex);
         }        
     }//GEN-LAST:event_BtnLichidareActionPerformed
 
+//afiseaza informatiile utilizatorului
     private void BtnInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnInfoActionPerformed
           try {
-              String query="Select * from Client where ID_C="+id;
+              String query="Select * from Client where ID_C="+id;   //cauta in BD conform id-ului
               Statement statement=con.createStatement();
               ResultSet rs=statement.executeQuery(query);
               while(rs.next())
-              {
+              { //creaza string-ul de afisare
                   String info="Cont EURO: "+rs.getString("Sold_Cont_EURO")+"\n Cont LEI: "+rs.getString("Sold_Cont_LEI");
-                  JOptionPane.showMessageDialog(null, "Informatii Utilizator\n"+info, "Informatii: " + "Informatii Utilizator", JOptionPane.PLAIN_MESSAGE);
+                  JOptionPane.showMessageDialog(null, "Informatii Utilizator\n"+info, "Informatii: " + " Utilizator", JOptionPane.PLAIN_MESSAGE);
           } 
           }catch (SQLException ex) {
               Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
@@ -242,6 +165,12 @@ public class Client extends javax.swing.JFrame {
         
 
     }//GEN-LAST:event_BtnInfoActionPerformed
+
+    
+    private void BtnRetragereActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnRetragereActionPerformed
+       Retragere r=new Retragere(id);
+       r.setVisible(true);
+    }//GEN-LAST:event_BtnRetragereActionPerformed
 
     /**
      * @param args the command line arguments
@@ -282,27 +211,17 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JButton BtnInfo;
     private javax.swing.JButton BtnLichidare;
     private javax.swing.JButton BtnRetragere;
-    private javax.swing.JLabel LabelCNP;
-    private javax.swing.JLabel LabelEuro;
-    private javax.swing.JLabel LabelLei;
-    private javax.swing.JTextField TextEuro;
-    private javax.swing.JTextField TextLei;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel labelID;
     // End of variables declaration//GEN-END:variables
 
-    //se verifica daca clientul curent poate lichida conturile
-    private void verificareLichidare() {
-        Float euro=Float.parseFloat(LabelEuro.getText());
-         Float lei=Float.parseFloat(LabelLei.getText());
-         if(euro==0 && lei==0 && BtnLichidare.isEnabled()==false)
-             BtnLichidare.setEnabled(true);
+
+    int DoarNumar(String text)
+   {
+       String regex = "^[0-9]+";
+        if(text.matches(regex))
+            return 1;  
+        else 
+            return 0;
          
-    }
+   }
 }
