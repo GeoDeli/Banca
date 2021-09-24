@@ -4,21 +4,47 @@
  */
 package banca;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author delim
  */
 public class Retragere extends javax.swing.JFrame {
-
-    /**
-     * Creates new form Retragere
-     */
+        Connection con;
+      int id;
     public Retragere() {
         initComponents();
     }
 
-    Retragere(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    Retragere(int id_c) {
+            initComponents();
+              id=id_c;
+      try {  
+          //realizeaza conexiunea la BD
+        String database="jdbc:mysql://localhost:3306/Banca";
+        String username="root";
+        String pass="";
+              con=DriverManager.getConnection(database,username,pass);
+         String query="Select * from Client where ID_C="+id;
+      Statement statement =con.createStatement();
+      ResultSet rs=statement.executeQuery(query);
+      while(rs.next())
+      { //preia informatia despre conturi
+        LabelEuro.setText(rs.getString("Sold_Cont_EURO")); 
+         LabelLei.setText(rs.getString("Sold_Cont_LEI"));
+      }
+          } catch (SQLException ex) {
+              Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+          }
+            
     }
 
     /**
@@ -30,25 +56,130 @@ public class Retragere extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        LabelEuro = new javax.swing.JLabel();
+        LabelLei = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        TextEuro = new javax.swing.JTextField();
+        TextLei = new javax.swing.JTextField();
+        BtnRetragere = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel1.setText("Sold Euro");
+
+        jLabel2.setText("Sold Lei");
+
+        LabelEuro.setText("jLabel3");
+
+        LabelLei.setText("jLabel4");
+
+        jLabel3.setText("Retragere Lei:");
+
+        jLabel4.setText("Retragere Euro:");
+
+        TextEuro.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                TextEuroKeyReleased(evt);
+            }
+        });
+
+        TextLei.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                TextLeiKeyReleased(evt);
+            }
+        });
+
+        BtnRetragere.setText("Retrage fonduri");
+        BtnRetragere.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                BtnRetragereMouseEntered(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4))
+                .addGap(48, 48, 48)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(LabelEuro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(LabelLei, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(TextLei, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(TextEuro))
+                .addContainerGap(59, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(73, 73, 73)
+                .addComponent(BtnRetragere)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(51, 51, 51)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(LabelEuro))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(LabelLei))
+                .addGap(27, 27, 27)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(TextEuro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(TextLei, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addComponent(BtnRetragere)
+                .addGap(26, 26, 26))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
+    private void TextEuroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextEuroKeyReleased
+    if(DoarNumar(TextEuro.getText())==0)
+             JOptionPane.showMessageDialog(null, "Ati introdus un caracter nepermis", "Eroare: " + "Caracter nepermis", JOptionPane.ERROR_MESSAGE);
+
+    }//GEN-LAST:event_TextEuroKeyReleased
+
+    private void TextLeiKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextLeiKeyReleased
+        if(DoarNumar(TextLei.getText())==0)
+             JOptionPane.showMessageDialog(null, "Ati introdus un caracter nepermis", "Eroare: " + "Caracter nepermis", JOptionPane.ERROR_MESSAGE);
+
+    }//GEN-LAST:event_TextLeiKeyReleased
+
+    private void BtnRetragereMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BtnRetragereMouseEntered
+      
+       if(TextEuro.getText().isBlank()&&TextLei.getText().isBlank())
+         BtnRetragere.setEnabled(false);
+       else
+           BtnRetragere.setEnabled(true);
+    }//GEN-LAST:event_BtnRetragereMouseEntered
+
+   
+    int DoarNumar(String text)
+   {
+       String regex = "^[0-9]+";
+        if(text.matches(regex))
+            return 1;  
+        else 
+            return 0;
+         
+    }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -82,5 +213,14 @@ public class Retragere extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnRetragere;
+    private javax.swing.JLabel LabelEuro;
+    private javax.swing.JLabel LabelLei;
+    private javax.swing.JTextField TextEuro;
+    private javax.swing.JTextField TextLei;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     // End of variables declaration//GEN-END:variables
 }
