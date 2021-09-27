@@ -250,7 +250,7 @@ public class CreareUtilizator extends javax.swing.JDialog {
           statement=con.createStatement();  
           int row = statement.executeUpdate(query); 
           if(row>0)
-  JOptionPane.showMessageDialog(null, "Utilizator creat cu succes", "Succes: " + "Utilizator Creat", JOptionPane.PLAIN_MESSAGE);
+  JOptionPane.showMessageDialog(null, "Utilizator creat cu succes\n ID pentru autentificare: "+id, "Succes: " + "Utilizator Creat", JOptionPane.PLAIN_MESSAGE);
      doClose(RET_OK);
         } catch (SQLException ex) {
             Logger.getLogger(CreareUtilizator.class.getName()).log(Level.SEVERE, null, ex);

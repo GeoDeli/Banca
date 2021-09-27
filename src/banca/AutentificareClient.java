@@ -24,6 +24,7 @@ public class AutentificareClient extends javax.swing.JFrame {
      */
     public AutentificareClient() {
         initComponents();
+        this.setDefaultCloseOperation(AutentificareClient.DISPOSE_ON_CLOSE);
     }
 
     /**

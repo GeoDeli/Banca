@@ -32,10 +32,10 @@ public class Fisc extends javax.swing.JFrame {
 
     Connection con;
      File fisier;    
-     
+      
     public Fisc() {
         initComponents();
-      
+      setDefaultCloseOperation(Fisc.DISPOSE_ON_CLOSE);
         listClienti.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         
         //verifica daca fisierul exista, in caz contrar il creaza
