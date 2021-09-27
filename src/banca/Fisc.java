@@ -87,6 +87,7 @@ public class Fisc extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        BtnRefresh = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -135,6 +136,13 @@ public class Fisc extends javax.swing.JFrame {
 
         jLabel3.setText("Clienti nemonitorizati");
 
+        BtnRefresh.setText("Refresh cache");
+        BtnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnRefreshActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -142,24 +150,27 @@ public class Fisc extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(50, 50, 50)
-                        .addComponent(BtnMonitor)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-                        .addComponent(BtnOprireMonitorizare)
-                        .addGap(23, 23, 23))))
+                        .addGap(46, 46, 46)
+                        .addComponent(jLabel3)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(BtnOprireMonitorizare, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(BtnMonitor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(23, 23, 23))
+                    .addComponent(BtnRefresh, javax.swing.GroupLayout.Alignment.TRAILING)))
             .addGroup(layout.createSequentialGroup()
-                .addGap(141, 141, 141)
-                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(141, 141, 141)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(67, 67, 67)
+                        .addComponent(jLabel2)))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -168,22 +179,23 @@ public class Fisc extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
-                .addComponent(jLabel3)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(49, 49, 49)
+                        .addGap(58, 58, 58)
                         .addComponent(BtnMonitor)))
                 .addGap(50, 50, 50)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(BtnOprireMonitorizare)
-                        .addGap(61, 61, 61))))
+                        .addGap(38, 38, 38)
+                        .addComponent(BtnRefresh))))
         );
 
         pack();
@@ -338,6 +350,49 @@ reader.close();
           BtnOprireMonitorizare.setEnabled(false);
     }//GEN-LAST:event_BtnOprireMonitorizareActionPerformed
 
+    private void BtnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnRefreshActionPerformed
+    
+    try { //creaza fisier temporar
+             File tempFile = new File("myTempFile.txt"); 
+BufferedReader reader = new BufferedReader(new FileReader(fisier)); 
+BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+           Scanner r = new Scanner(fisier);
+           
+            while(r.hasNextLine())
+            { //preia doar CNP-ul din fisier pentru a acualiza conform BD-ului
+                String[] linie=r.nextLine().split(" ");
+                String CNP=linie[0];              
+                
+            //preia informatiile curente din BD
+           String   query="SELECT * FROM Client  where CNP=\""+CNP+"\"";
+            Statement statement=con.createStatement();
+            ResultSet   resultSet = statement.executeQuery(query);
+            while(resultSet.next())
+              {
+                float euroBD=resultSet.getFloat("Sold_Cont_EURO"); //stocheaza informatia din bd pentru a calcula diferenta si a afisa 
+                float leiBD=resultSet.getFloat("Sold_Cont_LEI");
+
+                        writer.write(CNP+" "+euroBD+" euro " +leiBD+" lei"); 
+
+              }
+          
+            }
+              r.close();
+            writer.close();  
+reader.close();  
+//suprascrie fifiserul de monitorizare pentru a-l face sa fie actualizat
+ Files.move(tempFile.toPath(), fisier.toPath(), StandardCopyOption.REPLACE_EXISTING);
+ JOptionPane.showMessageDialog(null, "Informatiile au fost actualizate cu succes", "Succes: " + "Actualizare monitorizare", JOptionPane.ERROR_MESSAGE);
+
+    }   catch (FileNotFoundException ex) {
+            Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_BtnRefreshActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -376,6 +431,7 @@ reader.close();
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnMonitor;
     private javax.swing.JButton BtnOprireMonitorizare;
+    private javax.swing.JButton BtnRefresh;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
