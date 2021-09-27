@@ -6,6 +6,7 @@ package banca;
 
 import java.sql.Connection;
 import java.io.*;
+import java.nio.file.*;
 import java.io.FileReader;
 import java.sql.*;
 import java.util.ArrayList;
@@ -18,7 +19,10 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import java.sql.Statement;
-
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  *
@@ -79,6 +83,7 @@ public class Fisc extends javax.swing.JFrame {
         BtnMonitor = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         listClientiMonitorizati = new javax.swing.JList<>();
+        BtnOprireMonitorizare = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -106,32 +111,50 @@ public class Fisc extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        listClientiMonitorizati.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listClientiMonitorizatiMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(listClientiMonitorizati);
+
+        BtnOprireMonitorizare.setText("Oprire monitorizare");
+        BtnOprireMonitorizare.setEnabled(false);
+        BtnOprireMonitorizare.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnOprireMonitorizareActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
-                            .addComponent(jScrollPane2)))
+                            .addComponent(jScrollPane2))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(144, 144, 144)
-                        .addComponent(BtnMonitor)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(10, 10, 10)
+                        .addComponent(BtnMonitor)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 122, Short.MAX_VALUE)
+                        .addComponent(BtnOprireMonitorizare)
+                        .addGap(22, 22, 22))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(BtnMonitor)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(BtnMonitor)
+                    .addComponent(BtnOprireMonitorizare))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -230,6 +253,66 @@ public class Fisc extends javax.swing.JFrame {
         
     }//GEN-LAST:event_listClientiMouseClicked
 
+    //cand s-a selectat un client ce este monitorizat
+    private void listClientiMonitorizatiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listClientiMonitorizatiMouseClicked
+        // TODO add your handling code here:
+        BtnOprireMonitorizare.setEnabled(true);
+    }//GEN-LAST:event_listClientiMonitorizatiMouseClicked
+
+    //opreste monitorizarea prin stergerea acestuia din text si a modificarii din BD
+    private void BtnOprireMonitorizareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnOprireMonitorizareActionPerformed
+        // TODO add your handling code here:
+          List<String> selectati = listClientiMonitorizati.getSelectedValuesList();
+          //modifica in bd
+          for(String cnp:selectati)
+          {  
+              try { 
+             String   query="update Client set Monitorizat=0 where CNP=\""+cnp+"\"";
+               Statement statement=con.createStatement();
+            
+         int   rezultat = statement.executeUpdate(query);
+               if(rezultat<0)
+                  JOptionPane.showMessageDialog(null, "Ceva nu a mers bine", "Eroare: " + "Imposibil de anulat monitorizarea", JOptionPane.ERROR_MESSAGE);
+        } catch (SQLException ex) {
+            Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
+        }
+             
+              try {
+                  //sterge din fisier randul cu informatiile clientului
+                 File tempFile = new File("myTempFile.txt"); 
+    
+BufferedReader reader = new BufferedReader(new FileReader(fisier)); 
+BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+String Linie;
+while((Linie = reader.readLine()) != null) { 
+ 
+// trim newline when comparing with lineToRemove 
+    String linieCurenta = Linie.trim(); 
+    
+    if(linieCurenta.contains(cnp)) 
+        continue; 
+ 
+    writer.write(linieCurenta + System.getProperty("line.separator")); 
+} 
+ 
+writer.close();  
+reader.close();  
+ Files.move(tempFile.toPath(), fisier.toPath(), StandardCopyOption.REPLACE_EXISTING);
+      boolean successful = tempFile.renameTo(fisier); 
+if(successful)
+    System.out.println("Yes");
+
+                          } catch (FileNotFoundException ex) {
+                  Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
+              } catch (IOException ex) {
+                  Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
+              }
+              
+          }
+     
+          actualizareListaMonitorizare(1, listClientiMonitorizati);
+    }//GEN-LAST:event_BtnOprireMonitorizareActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -267,6 +350,7 @@ public class Fisc extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnMonitor;
+    private javax.swing.JButton BtnOprireMonitorizare;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JList<String> listClienti;
