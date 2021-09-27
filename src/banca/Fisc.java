@@ -236,7 +236,7 @@ public class Fisc extends javax.swing.JFrame {
                 }
               }
            }
-         
+         r.close();
            
             
         } catch (FileNotFoundException ex) {
@@ -285,22 +285,18 @@ BufferedReader reader = new BufferedReader(new FileReader(fisier));
 BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
 String Linie;
 while((Linie = reader.readLine()) != null) { 
- 
-// trim newline when comparing with lineToRemove 
-    String linieCurenta = Linie.trim(); 
-    
-    if(linieCurenta.contains(cnp)) 
+//prea linia curenta si verifica daca ea contine CNP-ul clientului ce nu va mai fi monitorizat
+        if(Linie.contains(cnp)) 
         continue; 
  
-    writer.write(linieCurenta + System.getProperty("line.separator")); 
+    writer.write(Linie + System.getProperty("line.separator")); 
 } 
  
 writer.close();  
 reader.close();  
+//suprascrie fifiserul de monitorizare pentru a-l face sa fie actualizat
  Files.move(tempFile.toPath(), fisier.toPath(), StandardCopyOption.REPLACE_EXISTING);
-      boolean successful = tempFile.renameTo(fisier); 
-if(successful)
-    System.out.println("Yes");
+                      JOptionPane.showMessageDialog(null, "Clientul nu va mai fi monitorizat", "Succes: " + cnp+"", JOptionPane.INFORMATION_MESSAGE);
 
                           } catch (FileNotFoundException ex) {
                   Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
