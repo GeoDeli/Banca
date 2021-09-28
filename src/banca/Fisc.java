@@ -71,12 +71,8 @@ public class Fisc extends javax.swing.JFrame {
 	{
             Lista.removeAll();
 	DefaultListModel model=new DefaultListModel();
-
-        //adauga informatiile in model
-         Consumer<String> createModel = (String x) -> {
-           model.addElement(x);
-        };
-        linii.forEach(createModel);
+        //adauga informatiile in model pentru a fii afisate
+        linii.forEach(x->model.addElement(linii.get(linii.indexOf(x))));
      
         //afiseaza modelul creat in lista data ca si parametru
             Lista.setModel(model);
@@ -217,7 +213,7 @@ public class Fisc extends javax.swing.JFrame {
              //creaza un nou rand pentru fisier ce contine CLIENT EURO LEI
            Consumer<String> Monitorizeaza = (String s) -> {
                 try {
-                     BufferedWriter   bf = new BufferedWriter(new FileWriter(fisier,true));
+                     BufferedWriter   bw = Files.newBufferedWriter(fisier.toPath());
                     //preia info din BD
                     String query="Select * from Client where CNP=\""+s+"\"";
                     Statement statement=con.createStatement();
@@ -226,16 +222,15 @@ public class Fisc extends javax.swing.JFrame {
                     {
                         String euro=resultSet.getString("Sold_Cont_EURO");
                         String lei=resultSet.getString("Sold_Cont_lei");
-                        
-                        bf.append(s+" "+euro+" Euro "+lei+" lei \n");  //scrie in fisier
+                        bw.append(s+" "+euro+" Euro "+lei+" lei \n");  //scrie in fisier
                     }
-                    
+                    //modificare in BD pentru a se vedea cine e monitorizat
                     query="update Client set Monitorizat=1 where CNP=\""+s+"\"";
                     statement=con.createStatement();
                     int rezultat=statement.executeUpdate(query);
                     if(rezultat<0)
                         JOptionPane.showMessageDialog(null, "Ceva nu a mers bine", "Eroare: " + "Imposibil de urmarit", JOptionPane.ERROR_MESSAGE);
-                    bf.close();
+                    bw.close();
                 } catch (SQLException ex) {
                     Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
@@ -250,16 +245,13 @@ public class Fisc extends javax.swing.JFrame {
           
     }//GEN-LAST:event_BtnMonitorActionPerformed
         //verifica daca s-a modificat soldul unui cont pentru fiecare client monitorizat
-    public void monitorizare()
+    public void monitorizare() 
 {
-    Scanner r;
-    ArrayList monitorizati= new ArrayList(); //stocheaza monitorizatii din fisier 
-  
     try { 
-            r = new Scanner(fisier);
-            while(r.hasNextLine())
+           BufferedReader br = new BufferedReader(new FileReader(fisier));
+            while(br.readLine()!=null)
             { //preia toate informatiile din fisier si le converteste
-                String[] linie=r.nextLine().split(" ");
+                String[] linie=br.readLine().split(" ");
                 String CNP=linie[0];              
                 Float euro=Float.parseFloat(linie[1]);
                 Float lei=Float.parseFloat(linie[3]);
@@ -285,13 +277,17 @@ public class Fisc extends javax.swing.JFrame {
                       JOptionPane.showMessageDialog(null, "Au fost inregistrate urmatoarele modificari bancare:\n"+afisare, "Info: " + "Modificare sold client "+CNP, JOptionPane.PLAIN_MESSAGE);
                 }
               }
+            resultSet.close();
+            statement.close();
            }
-         r.close();
-           
+         br.close();
+          
             
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
+            Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
         }
 }
@@ -322,6 +318,8 @@ public class Fisc extends javax.swing.JFrame {
          int   rezultat = statement.executeUpdate(query); //testeaza modificarea
                if(rezultat<0)
                   JOptionPane.showMessageDialog(null, "Ceva nu a mers bine", "Eroare: " + "Imposibil de anulat monitorizarea", JOptionPane.ERROR_MESSAGE);
+         
+            statement.close();
         } catch (SQLException ex) {
             Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -342,6 +340,7 @@ while((Linie = reader.readLine()) != null) {
  
 writer.close();  
 reader.close();  
+
 //suprascrie fifiserul de monitorizare pentru a-l face sa fie actualizat
  Files.move(tempFile.toPath(), fisier.toPath(), StandardCopyOption.REPLACE_EXISTING);
                       JOptionPane.showMessageDialog(null, "Clientul nu va mai fi monitorizat", "Succes: " + cnp+"", JOptionPane.INFORMATION_MESSAGE);
@@ -383,8 +382,11 @@ BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
                         writer.write(CNP+" "+euroBD+" euro " +leiBD+" lei"); 
 
               }
+            resultSet.close();
+            statement.close();
           
             }
+            
               r.close();
             writer.close();  
 reader.close();  
