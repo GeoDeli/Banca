@@ -250,9 +250,10 @@ public class Fisc extends javax.swing.JFrame {
 {
     try { 
            BufferedReader br = new BufferedReader(new FileReader(fisier));
-            while(br.readLine()!=null)
+           String l;
+            while((l=br.readLine())!=null)
             { //preia toate informatiile din fisier si le converteste
-                String[] linie=br.readLine().split(" ");
+                String[] linie=l.split(" ");
                 String CNP=linie[0];              
                 Float euro=Float.parseFloat(linie[1]);
                 Float lei=Float.parseFloat(linie[3]);
