@@ -1,4 +1,4 @@
-# Banca contine o aplicatie de monitorizare a clientilor cand acestia isi modifica soldul.
+ Banca contine o aplicatie de monitorizare a clientilor cand acestia isi modifica soldul.
 
  Aplicatia are o interfata ce permite utilizatorului sa selecteze una din 3 actiuni posibile:
  
