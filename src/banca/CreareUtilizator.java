@@ -247,7 +247,7 @@ public class CreareUtilizator extends javax.swing.JDialog {
              id=Integer.parseInt(resultSet.getString("ID_C"))+1;
              
          }
-         query="INSERT INTO `client`(`ID_C`, `CNP`, `Sold_Cont_EURO`, `Sold_Cont_LEI`, `Monitorizat`) VALUES ("+id+",\""+cnp+"\","+eu+","+lei+",0)";
+         query="INSERT INTO `client`(`ID_C`, `CNP`, `Sold_Cont_EURO`, `Sold_Cont_LEI`) VALUES ("+id+",\""+cnp+"\","+eu+","+lei+")";
           statement=con.createStatement();  
           int row = statement.executeUpdate(query); 
           if(row>0)

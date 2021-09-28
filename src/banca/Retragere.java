@@ -252,7 +252,7 @@ public class Retragere extends javax.swing.JFrame {
                     nousold = sold + euro;
                     query = "Update Client set Sold_Cont_EURO=" + nousold + " where ID_C=" + id;
                 }
-                   if(nousold<1000)
+                   if(nousold<1000&&jLabel3.getText().contains("Retragere"))
                   JOptionPane.showMessageDialog(null, "Prea putini bani in cont", "Eroare: " + "Fonduri insuficiente", JOptionPane.INFORMATION_MESSAGE);
 else    {
                 Statement s = con.createStatement();
@@ -276,7 +276,7 @@ else    {
                     nousold = sold + lei;
                     query = "Update Client set Sold_Cont_LEI=" + nousold + " where ID_C=" + id;
                 }
-                  if(nousold<1000)
+                   if(nousold<1000&&jLabel3.getText().contains("Retragere"))
                   JOptionPane.showMessageDialog(null, "Prea putini bani in cont", "Eroare: " + "Fonduri insuficiente", JOptionPane.INFORMATION_MESSAGE);
 else  {
                 Statement s = con.createStatement();
