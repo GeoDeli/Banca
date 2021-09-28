@@ -21,3 +21,5 @@
 3. Fisc/Monitorizare
   
   Aceasta interfata permite fiscului sa vizualizeze clientii nemonitorizati precum si pe cei monitorizati. Monitoriarea oricarui client include o notificare in cazul in care soldurile clientului s-au modificat, precum si cu ce valori. Monitorizarea oricarui client se realizeaza selectand un client si actionand butonul de monitorizare. La fel si in cazul opriri monitorizarii.
+  
+  Nota: Aplicatia verifica informatiile introduse ale utilizatorului pentru a preveni SQLInjections si alte erori posibile
