@@ -130,6 +130,7 @@ public class CreareUtilizator extends javax.swing.JDialog {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setText("Creare Utilizator");
 
         jLabel2.setText("CNP:");
@@ -193,7 +194,7 @@ public class CreareUtilizator extends javax.swing.JDialog {
                         .addGap(0, 24, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(97, 97, 97)
+                .addGap(51, 51, 51)
                 .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -214,7 +215,7 @@ public class CreareUtilizator extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(TextLei, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
@@ -246,11 +247,11 @@ public class CreareUtilizator extends javax.swing.JDialog {
              id=Integer.parseInt(resultSet.getString("ID_C"))+1;
              
          }
-         query="INSERT INTO `client`(`ID_C`, `CNP`, `Sold_Cont_EURO`, `Sold_Cont_LEI`) VALUES ("+id+",\""+cnp+"\","+eu+","+lei+")";
+         query="INSERT INTO `client`(`ID_C`, `CNP`, `Sold_Cont_EURO`, `Sold_Cont_LEI`, `Monitorizat`) VALUES ("+id+",\""+cnp+"\","+eu+","+lei+",0)";
           statement=con.createStatement();  
           int row = statement.executeUpdate(query); 
           if(row>0)
-  JOptionPane.showMessageDialog(null, "Utilizator creat cu succes", "Succes: " + "Utilizator Creat", JOptionPane.PLAIN_MESSAGE);
+  JOptionPane.showMessageDialog(null, "Utilizator creat cu succes\n ID pentru autentificare: "+id, "Succes: " + "Utilizator Creat", JOptionPane.PLAIN_MESSAGE);
      doClose(RET_OK);
         } catch (SQLException ex) {
             Logger.getLogger(CreareUtilizator.class.getName()).log(Level.SEVERE, null, ex);

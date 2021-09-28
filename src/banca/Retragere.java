@@ -24,11 +24,28 @@ public class Retragere extends javax.swing.JFrame {
 
     public Retragere() {
         initComponents();
+         this.setDefaultCloseOperation(Retragere.DISPOSE_ON_CLOSE);
     }
 
-    Retragere(int id_c) {
+    Retragere(int id_c, String optiune) {
+        initComponents();
+        this.setDefaultCloseOperation(Retragere.DISPOSE_ON_CLOSE);
+        
+        if(optiune.compareToIgnoreCase("depozit")==0)
+        {
+            jLabel3.setText("Depozit Lei");
+            jLabel4.setText("Depozit Euro");
+            BtnActiune.setText("Depoziteaza suma");
+        }
+        if(optiune.compareToIgnoreCase("retragere")==0)
+        {
+            jLabel3.setText("Retragere Lei");
+            jLabel4.setText("Retragere Euro");
+            BtnActiune.setText("Retrage suma");
+        }
+        
         try {
-            initComponents();
+            
             id = id_c;
 
             //realizeaza conexiunea la BD
@@ -63,8 +80,6 @@ public class Retragere extends javax.swing.JFrame {
         TextLei = new javax.swing.JTextField();
         BtnActiune = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
-        RBRetrag = new javax.swing.JRadioButton();
-        RBDepozitez = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -110,41 +125,17 @@ public class Retragere extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setText("Fondurile le");
-
-        buttonGroup1.add(RBRetrag);
-        RBRetrag.setText("Retrag");
-        RBRetrag.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RBRetragActionPerformed(evt);
-            }
-        });
-
-        buttonGroup1.add(RBDepozitez);
-        RBDepozitez.setText("Depozitez");
-        RBDepozitez.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RBDepozitezActionPerformed(evt);
-            }
-        });
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel5.setText("Modificare sold");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(114, 114, 114)
-                .addComponent(jLabel5)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(BtnActiune, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(RBRetrag)
-                        .addGap(26, 26, 26)
-                        .addComponent(RBDepozitez))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
@@ -153,32 +144,29 @@ public class Retragere extends javax.swing.JFrame {
                             .addComponent(jLabel4))
                         .addGap(48, 48, 48)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(TextEuro)
-                                    .addComponent(TextLei, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(22, 22, 22))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(TextEuro)
+                                .addComponent(TextLei, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(LabelEuro, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(LabelLei))))
+                            .addComponent(LabelLei)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(jLabel5)))
                 .addContainerGap(40, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(RBRetrag)
-                    .addComponent(RBDepozitez))
-                .addGap(5, 5, 5)
+                .addGap(24, 24, 24)
+                .addComponent(jLabel5)
+                .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(LabelEuro))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(LabelLei))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(LabelLei, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2))
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -191,7 +179,7 @@ public class Retragere extends javax.swing.JFrame {
                         .addComponent(TextEuro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(30, 30, 30)
                 .addComponent(BtnActiune)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -209,8 +197,8 @@ public class Retragere extends javax.swing.JFrame {
         if (!TextEuro.getText().isEmpty()) {
             euro = Float.parseFloat(TextEuro.getText());
             Float sold = Float.parseFloat(LabelEuro.getText());
-            if (sold - euro < 0 && RBRetrag.isSelected()) {
-                JOptionPane.showMessageDialog(null, "Nu  aveti atat de multi euro in contul de lei", "Eroare: " + "Suma introdusa este prea mare", JOptionPane.ERROR_MESSAGE);
+            if (sold - euro < 1000 && jLabel3.getText().contains("Retragere")) {
+                JOptionPane.showMessageDialog(null, "In cont nu pot ramane mai putin de 1000 de euro", "Eroare: " + "Suma introdusa este prea mare", JOptionPane.ERROR_MESSAGE);
                 BtnActiune.setEnabled(false);
             } else {
                 BtnActiune.setEnabled(true);
@@ -230,8 +218,8 @@ public class Retragere extends javax.swing.JFrame {
             lei = Float.parseFloat(TextLei.getText());
             Float sold = Float.parseFloat(LabelLei.getText());
 
-            if (sold - lei < 0 && RBRetrag.isSelected()) {
-                JOptionPane.showMessageDialog(null, "Nu  aveti atat de multi lei in contul de lei", "Eroare: " + "Suma introdusa este prea mare", JOptionPane.ERROR_MESSAGE);
+            if (sold - lei < 1000 && jLabel3.getText().contains("Retragere")) {
+                JOptionPane.showMessageDialog(null, "In cont nu pot ramane mai putin de 1000 de lei", "Eroare: " + "Suma introdusa este prea mare", JOptionPane.ERROR_MESSAGE);
                 BtnActiune.setEnabled(false);
             } else {
                 BtnActiune.setEnabled(true);
@@ -248,23 +236,28 @@ public class Retragere extends javax.swing.JFrame {
 
     private void BtnActiuneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnActiuneActionPerformed
         int row = 0;
+        //daca se afla o suma in campul pentru euro
         if (!TextEuro.getText().isBlank()) {
             try {
                 Float euro = Float.parseFloat(TextEuro.getText());
                 Float sold = Float.parseFloat(LabelEuro.getText());
                 Float nousold = null;
                 String query = "";
-                if (RBRetrag.isSelected()) {
+                
+                if (jLabel3.getText().contains("Retragere")) {
                     nousold = sold - euro;
-
+                 
                     query = "Update Client set Sold_Cont_EURO=" + nousold + " where ID_C=" + id;
-                } else if (RBDepozitez.isSelected()) {
+                } else if (jLabel3.getText().contains("Depozit")) {
                     nousold = sold + euro;
                     query = "Update Client set Sold_Cont_EURO=" + nousold + " where ID_C=" + id;
                 }
+                   if(nousold<1000)
+                  JOptionPane.showMessageDialog(null, "Prea putini bani in cont", "Eroare: " + "Fonduri insuficiente", JOptionPane.INFORMATION_MESSAGE);
+else    {
                 Statement s = con.createStatement();
                 row = s.executeUpdate(query);
-
+                   }
             } catch (SQLException ex) {
                 Logger.getLogger(Retragere.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -276,25 +269,28 @@ public class Retragere extends javax.swing.JFrame {
                 Float sold = Float.parseFloat(LabelLei.getText());
                 Float nousold = null;
                 String query = "";
-                if (RBRetrag.isSelected()) {
+               if (jLabel3.getText().contains("Retragere")) {
                     nousold = sold - lei;
                     query = "Update Client set Sold_Cont_LEI=" + nousold + " where ID_C=" + id;
-                } else if (RBDepozitez.isSelected()) {
+                     } else if (jLabel3.getText().contains("Depozit")) {
                     nousold = sold + lei;
                     query = "Update Client set Sold_Cont_LEI=" + nousold + " where ID_C=" + id;
                 }
+                  if(nousold<1000)
+                  JOptionPane.showMessageDialog(null, "Prea putini bani in cont", "Eroare: " + "Fonduri insuficiente", JOptionPane.INFORMATION_MESSAGE);
+else  {
                 Statement s = con.createStatement();
                 row = s.executeUpdate(query);
-
+                  }
             } catch (SQLException ex) {
                 Logger.getLogger(Retragere.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
         if (row > 0) {
-            if (RBRetrag.isSelected()) {
+            if (jLabel3.getText().contains("Retragere")) {
                 JOptionPane.showMessageDialog(null, "Retragerea a fost efectuata cu succes", "Succes: " + "Retragere fonduri", JOptionPane.INFORMATION_MESSAGE);
-            } else if (RBDepozitez.isSelected()) {
+            } else if (jLabel3.getText().contains("Depozit")){
                 JOptionPane.showMessageDialog(null, "Depozitarea a fost efectuata cu succes", "Succes: " + "Depunere fonduri", JOptionPane.INFORMATION_MESSAGE);
             }
 
@@ -302,16 +298,9 @@ public class Retragere extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "A aparut o eroare", "Eroare: " + "Ceva nu a functionat bine", JOptionPane.ERROR_MESSAGE);
         }
         IncarcareInformatii();
+        
+        
     }//GEN-LAST:event_BtnActiuneActionPerformed
-
-    private void RBRetragActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RBRetragActionPerformed
-        // TODO add your handling code here:
-        BtnActiune.setText("Retragere fonduri");
-    }//GEN-LAST:event_RBRetragActionPerformed
-
-    private void RBDepozitezActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RBDepozitezActionPerformed
-        BtnActiune.setText("Depoziteaza fonduri");
-    }//GEN-LAST:event_RBDepozitezActionPerformed
 
     private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
 
@@ -332,7 +321,7 @@ public class Retragere extends javax.swing.JFrame {
                 
                 //verifica daca suma introdusa este mai mare decat ceea ce are in conturi. Daca da, atentioneaza si ingheata butonul
                 Float sold = Float.parseFloat(LabelEuro.getText());
-                if(sold-Float.parseFloat(euro)<0&&RBRetrag.isSelected())
+                if(sold-Float.parseFloat(euro)<0&&jLabel3.getText().contains("Retragere"))
                 { 
                     JOptionPane.showMessageDialog(null, "Nu  aveti atat de multi euro in contul de lei", "Eroare: " + "Suma introdusa este prea mare", JOptionPane.ERROR_MESSAGE);
                  BtnActiune.setEnabled(false);
@@ -355,7 +344,7 @@ public class Retragere extends javax.swing.JFrame {
                 }
                  //verifica daca suma introdusa este mai mare decat ceea ce are in conturi. Daca da, atentioneaza si ingheata butonul
                 Float sold = Float.parseFloat(LabelLei.getText());
-                if(sold-Float.parseFloat(lei)<0&&RBRetrag.isSelected())
+                if(sold-Float.parseFloat(lei)<0&&jLabel3.getText().contains("Retragere"))
                 { JOptionPane.showMessageDialog(null, "Nu  aveti atat de multi lei in contul de lei", "Eroare: " + "Suma introdusa este prea mare", JOptionPane.ERROR_MESSAGE);
                  BtnActiune.setEnabled(false);
                 }
@@ -363,9 +352,7 @@ public class Retragere extends javax.swing.JFrame {
                 BtnActiune.setEnabled(false);
             }
         }
-        if (!RBDepozitez.isSelected() && !RBRetrag.isSelected()) {
-            BtnActiune.setEnabled(false);
-        }
+       
         if (euro.isBlank() && lei.isBlank()) {
             BtnActiune.setEnabled(false);
         }
@@ -418,8 +405,6 @@ public class Retragere extends javax.swing.JFrame {
     private javax.swing.JButton BtnActiune;
     private javax.swing.JLabel LabelEuro;
     private javax.swing.JLabel LabelLei;
-    private javax.swing.JRadioButton RBDepozitez;
-    private javax.swing.JRadioButton RBRetrag;
     private javax.swing.JTextField TextEuro;
     private javax.swing.JTextField TextLei;
     private javax.swing.ButtonGroup buttonGroup1;

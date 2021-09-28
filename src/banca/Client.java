@@ -18,12 +18,14 @@ public class Client extends javax.swing.JFrame {
       int id;
     public Client() {
         initComponents();
+            setDefaultCloseOperation(Client.DISPOSE_ON_CLOSE);
     }
     
     //constructorul primeste ID-ul autentificat pentru a afisa informatiile clientului pe parcurs
     public Client(int id_c) {
         initComponents();
         id=id_c;
+            setDefaultCloseOperation(Client.DISPOSE_ON_CLOSE);
       try {  
           //realizeaza conexiunea la BD
         String database="jdbc:mysql://localhost:3306/Banca";
@@ -48,12 +50,14 @@ public class Client extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         BtnLichidare = new javax.swing.JButton();
-        BtnRetragere = new javax.swing.JButton();
+        BtnDepozit = new javax.swing.JButton();
         BtnInfo = new javax.swing.JButton();
+        BtnRetragere = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Informatii client");
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel1.setText("Optiuni client");
 
         BtnLichidare.setText("Lichidare conturi");
         BtnLichidare.addActionListener(new java.awt.event.ActionListener() {
@@ -62,10 +66,10 @@ public class Client extends javax.swing.JFrame {
             }
         });
 
-        BtnRetragere.setText("Depozit/Retrageri");
-        BtnRetragere.addActionListener(new java.awt.event.ActionListener() {
+        BtnDepozit.setText("Depozit");
+        BtnDepozit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnRetragereActionPerformed(evt);
+                BtnDepozitActionPerformed(evt);
             }
         });
 
@@ -76,24 +80,36 @@ public class Client extends javax.swing.JFrame {
             }
         });
 
+        BtnRetragere.setText("Retragere");
+        BtnRetragere.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnRetragereActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(45, 45, 45)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(jLabel1))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(BtnLichidare, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(BtnRetragere)
-                        .addComponent(BtnInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(43, Short.MAX_VALUE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(BtnRetragere, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addGap(45, 45, 45)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(BtnLichidare, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(BtnDepozit)
+                                .addComponent(BtnInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(59, 59, 59)
+                        .addComponent(jLabel1)))
+                .addContainerGap(62, Short.MAX_VALUE))
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {BtnInfo, BtnLichidare, BtnRetragere});
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {BtnDepozit, BtnInfo, BtnLichidare, BtnRetragere});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -105,8 +121,10 @@ public class Client extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(BtnLichidare)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(BtnDepozit)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(BtnRetragere)
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -170,8 +188,14 @@ public class Client extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnInfoActionPerformed
 
     
+    private void BtnDepozitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnDepozitActionPerformed
+       Retragere r=new Retragere(id,"depozit");
+       r.setVisible(true);
+    }//GEN-LAST:event_BtnDepozitActionPerformed
+
     private void BtnRetragereActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnRetragereActionPerformed
-       Retragere r=new Retragere(id);
+        // TODO add your handling code here:
+          Retragere r=new Retragere(id,"retragere");
        r.setVisible(true);
     }//GEN-LAST:event_BtnRetragereActionPerformed
 
@@ -211,6 +235,7 @@ public class Client extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnDepozit;
     private javax.swing.JButton BtnInfo;
     private javax.swing.JButton BtnLichidare;
     private javax.swing.JButton BtnRetragere;
