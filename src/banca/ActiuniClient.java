@@ -4,6 +4,9 @@
  */
 package banca;
 
+import DB.Conectare;
+import OOP.ClientImplement;
+import OOP.Client;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,28 +16,24 @@ import javax.swing.JOptionPane;
  *
  * @author delim
  */
-public class Client extends javax.swing.JFrame {
+public class ActiuniClient extends javax.swing.JFrame {
       Connection con;
       int id;
-    public Client() {
+    public ActiuniClient() {
         initComponents();
-            setDefaultCloseOperation(Client.DISPOSE_ON_CLOSE);
+            setDefaultCloseOperation(ActiuniClient.DISPOSE_ON_CLOSE);
     }
     
     //constructorul primeste ID-ul autentificat pentru a afisa informatiile clientului pe parcurs
-    public Client(int id_c) {
+    public ActiuniClient(int id_c) {
         initComponents();
         id=id_c;
-            setDefaultCloseOperation(Client.DISPOSE_ON_CLOSE);
+            setDefaultCloseOperation(ActiuniClient.DISPOSE_ON_CLOSE);
       try {  
-          //realizeaza conexiunea la BD
-        String database="jdbc:mysql://localhost:3306/Banca";
-        String username="root";
-        String pass="";
-              con=DriverManager.getConnection(database,username,pass);
+        con= Conectare.getConnection();
                  
-          } catch (SQLException ex) {
-              Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+          }  catch (Exception ex) {
+              Logger.getLogger(ActiuniClient.class.getName()).log(Level.SEVERE, null, ex);
           }
         
     }
@@ -132,39 +131,27 @@ public class Client extends javax.swing.JFrame {
 
         //lichideaza conturile utilizatorului daca acesta este sigur de optiunea aleasa
     private void BtnLichidareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnLichidareActionPerformed
- try {
-     String query="Select * from Client where ID_C="+id;
-      Statement statement =con.createStatement();
-      ResultSet rs=statement.executeQuery(query);
-      while(rs.next())
-      { //preia informatia despre conturi
-        Float euro=Float.parseFloat(rs.getString("Sold_Cont_EURO")); 
-         Float lei=Float.parseFloat(rs.getString("Sold_Cont_LEI"));
-         
-         if(euro!=0 && lei!=0)  //verifica daca se poate sterge contul
-              JOptionPane.showMessageDialog(null, "Actiune imposibila \nConturile au sold diferit de 0", "Eroare: " + "Lichidare imposibila", JOptionPane.ERROR_MESSAGE);
-            else
-         {
-             //se intreaba utilizatorul daca doreste stergerea contului
+        ClientImplement imp = new ClientImplement();
+        Client client= imp.get(id);
+        //preia informatia despre conturi
+        Float euro=(client.getSold_Euro());
+        Float lei=(client.getSold_Lei());
+        if(euro!=0 && lei!=0)  //verifica daca se poate sterge contul
+            JOptionPane.showMessageDialog(null, "Actiune imposibila \nConturile au sold diferit de 0", "Eroare: " + "Lichidare imposibila", JOptionPane.ERROR_MESSAGE);
+        else
+        {
+            //se intreaba utilizatorul daca doreste stergerea contului
             int raspuns=  JOptionPane.showConfirmDialog(null,"Sigur doriti sa lichidati conturile?","Sunteti sigur?",JOptionPane.YES_NO_OPTION);
            
             if(raspuns==JOptionPane.YES_OPTION)
             {  //stergere efectuva
-             query="Delete from Client where ID_C="+id;
-              statement=con.createStatement();
-             int row = statement.executeUpdate(query); 
-            if(row>0)
-              JOptionPane.showMessageDialog(null, "Utilizator sters cu succes", "Succes: " + "Utilizatorul a fost sters cu succes", JOptionPane.INFORMATION_MESSAGE);
-           }
-           else 
+                imp.delete(id);
+            }
+            else 
                 //anulare stergere
-           if(raspuns==JOptionPane.NO_OPTION)
-         JOptionPane.showMessageDialog(null, "Lichidarea conturilor este oprita cu succes", "Abandon " + "", JOptionPane.INFORMATION_MESSAGE);
-
-         }
-      }
-        } catch (SQLException ex) {
-            Logger.getLogger(CreareUtilizator.class.getName()).log(Level.SEVERE, null, ex);
+                if(raspuns==JOptionPane.NO_OPTION)
+                    JOptionPane.showMessageDialog(null, "Lichidarea conturilor este oprita cu succes", "Abandon " + "", JOptionPane.INFORMATION_MESSAGE);
+            
         }        
     }//GEN-LAST:event_BtnLichidareActionPerformed
 
@@ -229,7 +216,7 @@ public class Client extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Client().setVisible(true);
+                new banca.ActiuniClient().setVisible(true);
             }
         });
     }

@@ -24,6 +24,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Consumer;
+import DB.Conectare;
+import OOP.Client;
+import OOP.ClientImplement;
 
 /**
  *
@@ -51,13 +54,10 @@ public class Fisc extends javax.swing.JFrame {
                 }
             }
          
-        String database="jdbc:mysql://localhost:3306/Banca";
-        String username="root";
-        String pass="";
-        con=DriverManager.getConnection(database,username,pass);
+        con= Conectare.getConnection();
         
-        } catch (SQLException ex) {
-            Logger.getLogger(CreareUtilizator.class.getName()).log(Level.SEVERE, null, ex);
+        }  catch (Exception ex) {
+            Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
         }
           //afiseaza informatile legate de cine este urmarit si cine nu
         IncarcaMonitorizare();
@@ -205,7 +205,7 @@ public class Fisc extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnMonitorActionPerformed
-
+ ClientImplement imp=new ClientImplement();
         //preia cnp-urile selectate
          List<String> selectati = listClienti.getSelectedValuesList();
       
@@ -214,22 +214,17 @@ public class Fisc extends javax.swing.JFrame {
                 try {
                      BufferedWriter   bw = Files.newBufferedWriter(fisier.toPath(),StandardOpenOption.CREATE, StandardOpenOption.APPEND);
                     //preia info din BD
-                    String query="Select * from Client where CNP=\""+s+"\"";
-                    Statement statement=con.createStatement();
-                    ResultSet resultSet = statement.executeQuery(query);
-                    while(resultSet.next())
-                    {
-                        String euro=resultSet.getString("Sold_Cont_EURO");
-                        String lei=resultSet.getString("Sold_Cont_lei");
+                  Client client= imp.getWithCNP(s);
+                    
+                        float euro=client.getSold_Euro();
+                        float lei=client.getSold_Lei();
                         bw.append(s+" "+euro+" Euro "+lei+" lei \n");  //scrie in fisier
-                    }
+                    
                     
                     bw.close();
                  } catch (IOException ex) {
                     Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SQLException ex) {
-                 Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
-             }
+                } 
            
             };
                 selectati.forEach(Monitorizeaza);
@@ -241,6 +236,8 @@ public class Fisc extends javax.swing.JFrame {
         //verifica daca s-a modificat soldul unui cont pentru fiecare client monitorizat
     public void monitorizare() 
 {
+    ClientImplement imp=new ClientImplement();
+    
     try { 
            BufferedReader br = new BufferedReader(new FileReader(fisier));
            String l;
@@ -252,13 +249,11 @@ public class Fisc extends javax.swing.JFrame {
                 Float lei=Float.parseFloat(linie[3]);
             
             //preia informatiile curente din BD
-           String   query="SELECT * FROM Client  where CNP=\""+CNP+"\"";
-            Statement statement=con.createStatement();
-            ResultSet   resultSet = statement.executeQuery(query);
-            while(resultSet.next())
-              {
-                float euroBD=resultSet.getFloat("Sold_Cont_EURO"); //stocheaza informatia din bd pentru a calcula diferenta si a afisa 
-                float leiBD=resultSet.getFloat("Sold_Cont_LEI");
+            
+           Client client= imp.getWithCNP(CNP);
+          
+                float euroBD=client.getSold_Euro(); //stocheaza informatia din bd pentru a calcula diferenta si a afisa 
+                float leiBD=client.getSold_Lei();
                 String afisare="";
                 //verifica daca informatia dintre fisier di BD difera
                 if(euroBD!=euro)
@@ -271,16 +266,12 @@ public class Fisc extends javax.swing.JFrame {
                 {
                       JOptionPane.showMessageDialog(null, "Au fost inregistrate urmatoarele modificari bancare:\n"+afisare, "Info: " + "Modificare sold client "+CNP, JOptionPane.PLAIN_MESSAGE);
                 }
-              }
-            resultSet.close();
-            statement.close();
+            
            }
          br.close();
           
             
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
             Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
@@ -340,9 +331,11 @@ reader.close();
           BtnOprireMonitorizare.setEnabled(false);
     }//GEN-LAST:event_BtnOprireMonitorizareActionPerformed
 
-    private void BtnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnRefreshActionPerformed
-    
-    try { //creaza fisier temporar
+    void refreshDate()
+    {
+        ClientImplement imp= new ClientImplement();
+        ArrayList c= imp.list();
+         try { //creaza fisier temporar
              File tempFile = new File("myTempFile.txt"); 
 BufferedReader reader = new BufferedReader(new FileReader(fisier)); 
 BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
@@ -354,20 +347,14 @@ BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
                 String CNP=linie[0];              
                 
             //preia informatiile curente din BD
-           String   query="SELECT * FROM Client  where CNP=\""+CNP+"\"";
-            Statement statement=con.createStatement();
-            ResultSet   resultSet = statement.executeQuery(query);
-            while(resultSet.next())
-              {
-                float euroBD=resultSet.getFloat("Sold_Cont_EURO"); //stocheaza informatia din bd pentru a calcula diferenta si a afisa 
-                float leiBD=resultSet.getFloat("Sold_Cont_LEI");
+         Client client= imp.getWithCNP(CNP);
+           
+           
+                float euroBD=client.getSold_Euro(); //stocheaza informatia din bd pentru a calcula diferenta si a afisa 
+                float leiBD=client.getSold_Lei();
 
                         writer.write(CNP+" "+euroBD+" euro " +leiBD+" lei\n"); 
 
-              }
-            resultSet.close();
-            statement.close();
-          
             }
             
               r.close();
@@ -379,11 +366,12 @@ reader.close();
 
     }   catch (FileNotFoundException ex) {
             Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    private void BtnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnRefreshActionPerformed
+    refreshDate();
     }//GEN-LAST:event_BtnRefreshActionPerformed
 
     /**
@@ -434,58 +422,42 @@ reader.close();
     private javax.swing.JList<String> listClientiMonitorizati;
     // End of variables declaration//GEN-END:variables
 
-    private void actualizareListaMonitorizare(int monitor, JList lista) {
-        try {
-            ArrayList rez=new ArrayList();
-            String   query="SELECT * FROM Client  where Monitorizat="+monitor; //afiseaza clientii monitorizati
-            Statement statement=con.createStatement();
-            ResultSet   resultSet = statement.executeQuery(query);
-            
-            while(resultSet.next())
-            {
-                rez.add(resultSet.getString("CNP"));
-            }
-            afiseaza(rez,lista);
-        } catch (SQLException ex) {
-            Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+  
     private void IncarcaMonitorizare()
     {
-        ArrayList monitorizati=new ArrayList();
-         ArrayList rez=new ArrayList();
-         
-           //creare fiser temporar ce va detine informatiile actualizate
+             ClientImplement imp=new ClientImplement();
+        ArrayList monitorizati=new ArrayList(); //contine clientii monitorizati
+         ArrayList nemonitorizati=new ArrayList();   //clientii nemonitorizati
+         ArrayList clientiBD= imp.list();      //clienti din BD
+       
+           //citeste din fisier si preia doar CNP-ul celor monitorizati
          BufferedReader reader = null;
         try {
-            reader = new BufferedReader(new FileReader(fisier)); //citeste din fifiser pentru comparare
+            reader = new BufferedReader(new FileReader(fisier)); //citeste din fisiser pentru comparare
             String Linie;
         while((Linie = reader.readLine()) != null) { 
-          monitorizati.add(Linie.subSequence(0, 13)); //preia cnp-ul   
+               String cnp= String.valueOf(Linie.subSequence(0, 13));
+              monitorizati.add(cnp); //preia cnp-ul   
 } 
-            String   query="SELECT * FROM Client"; //afiseaza clientii monitorizati
-            Statement statement=con.createStatement();
-            ResultSet   resultSet = statement.executeQuery(query);
-            
-            while(resultSet.next())
-            {//daca clientul este monitorizat
-                if(monitorizati.contains(resultSet.getString("CNP")))
-                    continue;
-                    rez.add(resultSet.getString("CNP"));
-            }
-            afiseaza(rez,listClienti);
+        //compara cu lista de monitorizati pentru a-i verifica
+             Consumer<Client> verify = (Client cbd) -> {      
+                  if(monitorizati.contains(cbd.getCNP()))
+                   ; 
+                  else
+                    nemonitorizati.add(cbd.getCNP());          
+        };
+              clientiBD.forEach(verify);
+       
+            afiseaza(nemonitorizati,listClienti);
             afiseaza(monitorizati,listClientiMonitorizati);
             reader.close();
-            resultSet.close();
-            statement.close();
+         
             
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(Fisc.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
         
 
  

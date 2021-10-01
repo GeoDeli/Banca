@@ -4,6 +4,7 @@
  */
 package banca;
 
+import DB.Conectare;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -12,6 +13,8 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import OOP.Client;
+import OOP.ClientImplement;
 
 /**
  *
@@ -150,11 +153,7 @@ public class AutentificareClient extends javax.swing.JFrame {
     private void AutentificareBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AutentificareBTNActionPerformed
         // TODO add your handling code here:
         try {
-        Connection con;
-        String database="jdbc:mysql://localhost:3306/Banca";
-        String username="root";
-        String pass="";
-        con=DriverManager.getConnection(database,username,pass);
+        Connection con=Conectare.getConnection();
         
         //preia textul introdus
         String cnp="";
@@ -164,22 +163,20 @@ public class AutentificareClient extends javax.swing.JFrame {
          int ID=Integer.parseInt(TextID.getText());
         
          //cauta in baza de date utilizatorul cuc datele introduse
-        String query="SELECT * FROM Client where cnp=\""+cnp+"\" and ID_C="+ID;
-        Statement statement=con.createStatement();
-         ResultSet resultSet = statement.executeQuery(query);
+            ClientImplement imp=new ClientImplement();
+            Client cli= imp.autentificare(ID,cnp);
        
-         if(resultSet.next())
-         {
+         if(cli.getCNP().compareTo("0")!=0) {
              JOptionPane.showMessageDialog(null, "Client autentificat cu succes", "Succes " + "Autentificare reusita", JOptionPane.INFORMATION_MESSAGE);
-                Client c=new Client(ID);
-            c.setVisible(true);
-         }
-         else
-                 JOptionPane.showMessageDialog(null, "Datele introduse nu se gasesc in baza de date", "Eroare: " + "Utilizator inexistent", JOptionPane.ERROR_MESSAGE);
+             banca.ActiuniClient c=new banca.ActiuniClient(ID);
+             c.setVisible(true);
+            } else JOptionPane.showMessageDialog(null, "Datele introduse nu se gasesc in baza de date", "Eroare: " + "Utilizator inexistent", JOptionPane.ERROR_MESSAGE);
 
          
         } catch (SQLException ex) {
             Logger.getLogger(CreareUtilizator.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(AutentificareClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_AutentificareBTNActionPerformed
 

@@ -4,6 +4,9 @@
  */
 package banca;
 
+import DB.Conectare;
+import OOP.Client;
+import OOP.ClientImplement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -49,12 +52,11 @@ public class Retragere extends javax.swing.JFrame {
             id = id_c;
 
             //realizeaza conexiunea la BD
-            String database = "jdbc:mysql://localhost:3306/Banca";
-            String username = "root";
-            String pass = "";
-            con = DriverManager.getConnection(database, username, pass);
+            con=Conectare.getConnection();
             IncarcareInformatii();
         } catch (SQLException ex) {
+            Logger.getLogger(Retragere.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(Retragere.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -235,69 +237,51 @@ public class Retragere extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnActiuneMouseEntered
 
     private void BtnActiuneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnActiuneActionPerformed
-        int row = 0;
+    
+             ClientImplement ci=new ClientImplement();
+             Client client= ci.get(id);
         //daca se afla o suma in campul pentru euro
         if (!TextEuro.getText().isBlank()) {
-            try {
-                Float euro = Float.parseFloat(TextEuro.getText());
-                Float sold = Float.parseFloat(LabelEuro.getText());
-                Float nousold = null;
-                String query = "";
+           Float euro = Float.parseFloat(TextEuro.getText());
+            Float sold = Float.parseFloat(LabelEuro.getText());
+            Float nousold = null;
+           
+            if (jLabel3.getText().contains("Retragere")) {
+                nousold = sold - euro;
+                client.setSold_Euro(nousold);
                 
-                if (jLabel3.getText().contains("Retragere")) {
-                    nousold = sold - euro;
-                 
-                    query = "Update Client set Sold_Cont_EURO=" + nousold + " where ID_C=" + id;
-                } else if (jLabel3.getText().contains("Depozit")) {
-                    nousold = sold + euro;
-                    query = "Update Client set Sold_Cont_EURO=" + nousold + " where ID_C=" + id;
-                }
-                   if(nousold<1000&&jLabel3.getText().contains("Retragere"))
-                  JOptionPane.showMessageDialog(null, "Prea putini bani in cont", "Eroare: " + "Fonduri insuficiente", JOptionPane.INFORMATION_MESSAGE);
-else    {
-                Statement s = con.createStatement();
-                row = s.executeUpdate(query);
-                   }
-            } catch (SQLException ex) {
-                Logger.getLogger(Retragere.class.getName()).log(Level.SEVERE, null, ex);
+            } else if (jLabel3.getText().contains("Depozit")) {
+                nousold = sold + euro;
+                client.setSold_Euro(nousold);
+            }
+            if(nousold<1000&&jLabel3.getText().contains("Retragere"))
+                JOptionPane.showMessageDialog(null, "Prea putini bani in cont", "Eroare: " + "Fonduri insuficiente", JOptionPane.INFORMATION_MESSAGE);
+            else    {
+                ci.update(client);    
             }
 
         }
         if (!TextLei.getText().isBlank()) {
-            try {
-                Float lei = Float.parseFloat(TextLei.getText());
-                Float sold = Float.parseFloat(LabelLei.getText());
-                Float nousold = null;
-                String query = "";
-               if (jLabel3.getText().contains("Retragere")) {
-                    nousold = sold - lei;
-                    query = "Update Client set Sold_Cont_LEI=" + nousold + " where ID_C=" + id;
-                     } else if (jLabel3.getText().contains("Depozit")) {
-                    nousold = sold + lei;
-                    query = "Update Client set Sold_Cont_LEI=" + nousold + " where ID_C=" + id;
-                }
-                   if(nousold<1000&&jLabel3.getText().contains("Retragere"))
-                  JOptionPane.showMessageDialog(null, "Prea putini bani in cont", "Eroare: " + "Fonduri insuficiente", JOptionPane.INFORMATION_MESSAGE);
-else  {
-                Statement s = con.createStatement();
-                row = s.executeUpdate(query);
-                  }
-            } catch (SQLException ex) {
-                Logger.getLogger(Retragere.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        }
-        if (row > 0) {
+            Float lei = Float.parseFloat(TextLei.getText());
+            Float sold = Float.parseFloat(LabelLei.getText());
+            Float nousold = null;
+         
             if (jLabel3.getText().contains("Retragere")) {
-                JOptionPane.showMessageDialog(null, "Retragerea a fost efectuata cu succes", "Succes: " + "Retragere fonduri", JOptionPane.INFORMATION_MESSAGE);
-            } else if (jLabel3.getText().contains("Depozit")){
-                JOptionPane.showMessageDialog(null, "Depozitarea a fost efectuata cu succes", "Succes: " + "Depunere fonduri", JOptionPane.INFORMATION_MESSAGE);
+                nousold = sold - lei;
+                client.setSold_Lei(nousold);
+            } else if (jLabel3.getText().contains("Depozit")) {
+                nousold = sold + lei;
+                client.setSold_Lei(nousold);
+            }
+            if(nousold<1000&&jLabel3.getText().contains("Retragere"))
+                JOptionPane.showMessageDialog(null, "Prea putini bani in cont", "Eroare: " + "Fonduri insuficiente", JOptionPane.INFORMATION_MESSAGE);
+            else  {
+                ci.update(client);
             }
 
-        } else {
-            JOptionPane.showMessageDialog(null, "A aparut o eroare", "Eroare: " + "Ceva nu a functionat bine", JOptionPane.ERROR_MESSAGE);
         }
-        IncarcareInformatii();
+       
+                IncarcareInformatii();
         
         
     }//GEN-LAST:event_BtnActiuneActionPerformed
@@ -419,16 +403,13 @@ else  {
 
         TextEuro.setText("");
         TextLei.setText("");
-        try {
-            String query = "Select * from Client where ID_C=" + id;
-            Statement statement = con.createStatement();
-            ResultSet rs = statement.executeQuery(query);
-            while (rs.next()) { //preia informatia despre conturi
-                LabelEuro.setText(rs.getString("Sold_Cont_EURO"));
-                LabelLei.setText(rs.getString("Sold_Cont_LEI"));
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        }
+      
+            ClientImplement ci= new ClientImplement();
+          Client client=  ci.get(id);
+            
+                LabelEuro.setText(String.valueOf(client.getSold_Euro()));
+                LabelLei.setText(String.valueOf(client.getSold_Lei()));
+           
+       
     }
 }
