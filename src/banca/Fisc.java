@@ -4,29 +4,22 @@
  */
 package banca;
 
-import java.sql.Connection;
+import DB.Conectare;
+import OOP.Client;
+import OOP.ClientImplement;
 import java.io.*;
 import java.nio.file.*;
-import java.io.FileReader;
-import java.sql.*;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
-import java.sql.Statement;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.function.Consumer;
-import DB.Conectare;
-import OOP.Client;
-import OOP.ClientImplement;
 
 /**
  *
